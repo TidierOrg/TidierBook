@@ -1,0 +1,75 @@
+---
+title: "Workflow: Basics"
+---
+
+## Coding basics
+
+You can use Julia to do basic math calculations:
+```{julia}
+#| eval: false
+1 / 200 * 30
+(59 + 73 + 2) / 3
+sin(pi / 2)
+```
+
+You can create new objects with the assignment operator `=`:
+
+```{julia}
+#| eval: false
+x = 3 * 4
+```
+
+Note that the value of `x` is not printed, it’s just stored. If you want to view the value, type `x` in the Julia REPL.
+
+Combine multiple values into a vector with square brackets:
+```{julia}
+primes = [2, 3, 5, 7, 11]
+```
+
+Apply basic arithmetics on each elemt of the vector:
+
+```{julia}
+#| eval: false
+primes * 2
+primes .+1
+```
+
+## Comments
+
+Comments are statements in a code that are ignored by the compiler at the time of execution, but their purpose is to be read by other humans. Comments provide an explanation for the steps that are used in the code. During coding, proper use of comments makes maintenance easier and finding bugs easily. 
+
+```{julia}
+#| eval: false
+# Create a vector of primes
+primes = [2, 3, 5, 7, 11]
+
+# Multiply primes by 2
+primes * 2
+```
+
+## What is in a name?
+
+```{julia}
+object_name = primes
+this_is_a_really_long_name = 2.5
+```
+
+```{julia}
+julia_rocks = 2^3
+```
+
+```{julia}
+#| eval: false
+julia_rocks
+#> ERROR: UndefVarError: `julia_rock` not defined
+```
+
+## Calling functions
+
+```{julia}
+add_x_and_y(x, y) = x + y
+```
+
+```{julia}
+add_x_and_y(3, 4)
+```

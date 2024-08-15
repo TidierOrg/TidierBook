@@ -1,0 +1,248 @@
+---
+title: "Data Transformation"
+---
+
+## Introduction
+
+### Prerequisits
+
+```{julia}
+using Tidier
+```
+
+### penguins
+
+```{julia}
+using PalmerPenguins
+penguins = DataFrame(PalmerPenguins.load())
+```
+
+## Rows
+
+### `@filter()`
+
+```{julia}
+@chain penguins begin
+    @filter(bill_length_mm > 50)
+end
+```
+
+```{julia}
+@chain penguins begin
+    @filter(island == "Biscoe" && sex == "male") 
+end
+```
+
+
+```{julia}
+@chain penguins begin
+    @filter(island == "Biscoe" || sex == "male") 
+end
+```
+
+```{julia}
+@chain penguins begin
+    @filter(island in ("Biscoe", "Dream"))
+end
+```
+
+```{julia}
+penguins_male = @chain penguins begin
+    @filter(sex == "male") 
+end
+```
+
+### `@arrange()`
+
+```{julia}
+@chain penguins begin
+    @arrange(sex, body_mass_g, flipper_length_mm)
+end
+```
+
+```{julia}
+@chain penguins begin
+    @arrange(desc(sex), body_mass_g, flipper_length_mm)
+end
+```
+
+## `@distinct()`
+
+```{julia}
+@chain penguins begin
+    @distinct()
+end
+```
+
+Note that `@distinct()` keeps the first occurrence of each unique combination of `species` and `island`.
+```{julia}
+@chain penguins begin
+    @distinct(species, island)
+end
+```
+
+If you only want to keep the columns with unique combinations, then you need to explicitely call `@select()`:
+```{julia}
+# TODO: @select() appears here before it is actually introduced below!
+@chain penguins begin
+    @distinct(species, island)
+    @select(species, island)
+end
+```
+
+## Columns
+
+### `@mutate()`
+
+The purpose of `@mutate()` is to add new colums that are calculated from existing colums. 
+```{julia}
+@chain penguins begin
+    @mutate(
+        bill_ratio_mm = bill_length_mm / bill_depth_mm
+    )
+end
+```
+
+Note that it is not possible to refer to newly created columns in the same `@mutate()` call, but it is possible to chain them:
+
+```{julia}
+@chain penguins begin
+    @mutate(
+        bill_ratio_mm = bill_length_mm / bill_depth_mm
+    )
+    @mutate(
+        bill_ratio_mm_2 = bill_ratio_mm * 2
+    )
+end
+```
+
+### `@select()`
+
+```{julia}
+@chain penguins begin
+    @select(species, island, bill_length_mm)
+end
+```
+
+```{julia}
+@chain penguins begin
+    @select(species:bill_length_mm)
+end
+```
+
+```{julia}
+@chain penguins begin
+    @select(!bill_length_mm)
+end
+```
+
+```{julia}
+#| eval: false
+# TODO: where() is not defined yet!
+@chain penguins begin
+    @select(where(is_string))
+end
+```
+
+- `starts_with("abc")`: matches names that begin with “abc” -> supported
+- `ends_with("xyz")`: matches names that end with “xyz” -> supported
+- `contains("ijk")`: matches names that contain “ijk” -> supported
+- `num_range("x", 1:3)`: matches x1, x2 and x3 -> NOT supported
+
+```{julia}
+@chain penguins begin
+    @select(bill_depth = bill_depth_mm)
+end
+```
+
+### `@rename()`
+
+```{julia}
+@chain penguins begin
+    @rename(bill_depth = bill_depth_mm,
+            bill_length = bill_length_mm)
+end
+```
+
+### `@relocate()`
+
+```{julia}
+# TODO: relocate() not defined yet!
+```
+
+## The Chain
+
+```{julia}
+@chain penguins begin
+    @filter(island in ("Biscoe", "Dream"))
+    @mutate(bill_ratio_mm = bill_length_mm / bill_depth_mm) 
+    @select(bill_ratio_mm, sex, species:island)
+    @arrange(bill_ratio_mm)
+end
+```
+
+## Groups
+
+### `@group_by()`
+```{julia}
+@chain penguins begin
+    @group_by(sex)
+end
+```
+
+### `@summarize()`
+
+```{julia}
+@chain penguins begin
+    @group_by(island)
+    @summarize(bill_length_mean = mean(bill_length_mm),
+               n = n())
+end
+```
+
+```{julia}
+@chain penguins begin
+    @group_by(island)
+    @summarize(bill_length_mean = mean(skipmissing(bill_length_mm)),
+               n = n())
+end
+```
+
+### `@slice()`
+
+Only slice currently supported, no slice_* functions
+
+```{julia}
+@chain penguins begin
+    @group_by(island)
+    @slice(1)
+end
+```
+
+```{julia}
+# TODO: @slice() does not respond to positive integers!
+@chain penguins begin
+    @group_by(island)
+    @arrange(bill_length_mm)
+    @slice(3)
+end
+```
+
+### Grouping by multiple variables
+
+```{julia}
+@chain penguins begin
+    @group_by(island, sex)
+    @summarize(n = n())
+end
+```
+
+### Ungrouping
+
+```{julia}
+@chain penguins begin
+    @group_by(island, sex)
+    @summarize(n = n())
+    @ungroup()
+end
+```

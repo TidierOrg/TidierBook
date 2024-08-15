@@ -1,0 +1,126 @@
+---
+title: "Data Transformation with TidierData"
+---
+
+```{julia}
+using TidierData
+```
+
+
+```{julia}
+df = DataFrame(col_a=1:2:1000, col_b=repeat(1:10, inner=50), col_c=1:500, col_d=rand(["red", "blue", "green"], 500))
+```
+
+# Summarize cases
+
+```{julia}
+@summarize(df, avg = mean(col_a))
+```
+
+```{julia}
+@count(df, col_b)
+```
+
+# Group cases
+
+```{julia}
+@chain df @group_by(col_b) @summarize(avg = mean(col_a))
+```
+
+```{julia}
+#| eval: false
+# NOT IMPLEMENTED YET: https://github.com/TidierOrg/TidierData.jl/issues/49
+@chain df @rowwise @mutate(string_length = length(col_d))
+```
+
+# Manipulate cases
+
+## Extact Cases
+
+
+```{julia}
+@chain df @filter(df, col_c > 250)
+```
+
+
+```{julia}
+@chain df @distinct(col_b)
+```
+
+
+```{julia}
+@chain df @slice(1:10)
+```
+
+```{julia}
+#| eval: false
+@chain df @slice_sample(5)
+```
+
+```{julia}
+#| eval: false
+@chain df @slice_min(col_c, prop = 0.25)
+```
+
+```{julia}
+#| eval: false
+@chain df @slice_head(n = 5)
+```
+
+## Arrange cases
+
+```{julia}
+@chain df @arrange(col_a)
+```
+
+```{julia}
+@chain df @arrange(desc(col_a))
+```
+
+## Add cases
+
+```{julia}
+#| eval: false
+@chain df @add_row(col_a = 1000, col_b = 11)
+```
+
+## Manipulate Variables
+
+## Extract Variables
+
+```{julia}
+@chain df @pull(col_a)
+```
+
+```{julia}
+@chain df @select(col_a, col_b)
+```
+
+```{julia}
+#| eval: false
+@chain df @select(col_a, col_b, everything())
+```
+
+```{julia}
+@chain df @select(col_a:col_c)
+```
+
+## Manipulate Multiple Variables at Once
+
+```{julia}
+@chain df @summarize(across(col_a:col_c, mean))
+```
+
+## Make New Variables
+
+```{julia}
+@chain df @mutate(col_e = col_a / col_b)
+@chain df @select(col_e = col_a / col_b)
+```
+
+```{julia}
+@chain df @rename(column_a = col_a)
+```
+
+# Vectorize Functions
+

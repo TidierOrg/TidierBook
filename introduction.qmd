@@ -1,0 +1,16 @@
+---
+title: "Tidy Data with Julia"
+---
+
+```{julia}
+#| eval: false
+using Tidier, PalmerPenguins
+penguins = DataFrame(PalmerPenguins.load())
+penguins
+@glimpse(penguins)
+@chain penguins begin
+  @filter(species in ("Adelie", "Gentoo")) 
+  @group_by(sex)
+  @summarize(body_mass_g_mean = mean(skipmissing(body_mass_g)))
+end
+```

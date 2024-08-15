@@ -1,0 +1,11 @@
+{
+  "hash": "8a1dd83c766be9a3af0225dd4aa90ec2",
+  "result": {
+    "markdown": "---\ntitle: \"Tidy Data with Julia\"\n---\n\n::: {.cell execution_count=1}\n``` {.julia .cell-code}\nusing Tidier, PalmerPenguins\npenguins = DataFrame(PalmerPenguins.load())\npenguins\n@glimpse(penguins)\n@chain penguins begin\n  @filter(species in (\"Adelie\", \"Gentoo\")) \n  @group_by(sex)\n  @summarize(body_mass_g_mean = mean(skipmissing(body_mass_g)))\nend\n```\n:::\n\n\n",
+    "supporting": [
+      "introduction_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

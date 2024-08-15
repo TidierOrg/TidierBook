@@ -1,0 +1,104 @@
+---
+title: "Data Import"
+---
+
+## Introduction
+
+### Prerequisites
+
+In Julia, you can read data from CSV files using the `CSV.jl` package, which provides functionality to handle CSV files efficiently.
+
+```{julia}
+using Tidier, CSV
+```
+
+## Reading data from a file
+
+```{julia}
+df = CSV.File("df.csv") |> DataFrame
+```
+
+### Handling different delimiters
+
+```{julia}
+df = CSV.File("df.csv", delim = ";") |> DataFrame
+```
+
+### Handling missing values
+
+```{julia}
+df = CSV.File("df.csv", missingstrings="N/A") |> DataFrame
+```
+
+### Specifying column types
+
+```{julia}
+df = CSV.File("df.csv", types=Dict(:Age => String)) |> DataFrame
+```
+
+## Writing data to a file
+
+```{julia}
+df = DataFrame(Name=["Alice", "Bob", "Charlie"], Age=[25, 30, 35], Country=["US", "UK", "Canada"])
+
+CSV.write("df.csv", df)
+```
+
+### Specifying delimiters
+
+```{julia}
+CSV.write("df.csv", df, delim=';')
+```
+
+### Specifying missing values
+
+```{julia}
+CSV.write("df.csv", df, missingstring="N/A")
+```
+
+### Writing a subset of columns
+
+```{julia}
+CSV.write("df.csv", df, cols=[:Name, :Age])
+```
+
+## Reading data from other sources
+
+### Excel Workbooks
+
+```{julia}
+#| eval: false
+using XLSX
+```
+
+### Google Sheets
+
+```{julia}
+#| eval: false
+using GoogleSheets
+```
+
+### SQL Databases
+
+Many options actually: [https://juliapackages.com/c/database](https://juliapackages.com/c/database)
+
+### Arrow
+
+```{julia}
+#| eval: false
+using Arrow
+```
+
+### Hierarchical Data
+
+```{julia}
+#| eval: false
+using JSON
+```
+
+### Web scraping
+
+```{julia}
+#| eval: false
+using TidierVest
+```

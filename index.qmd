@@ -1,0 +1,33 @@
+# Preface {.unnumbered}
+
+This is the website for **Tidier Data Science with Julia**, a work-in-progress book heavily inspired by the excellent **[R for Data Science](https://r4ds.hadley.nz/)** by @Wickham2023. This book will teach you how to import, transform, visualize, and begin to understand your data. The book aims to give you the skills you need to code for data science. It is suitable for people who have some familiarity with the ideas behind programming and coding, but who don’t yet know how to do data science.
+
+## Why Julia?
+
+First released in 2012, Julia is a relatively newer programming language compared to the more established languages like Python and R in the data science community. However, it has quickly gained traction for a variety of reasons. Here are some of the main reasons why Juliad can be considered a good choice for data science:
+
+1. **Performance**: Julia was designed from the ground up to be high performance. Its just-in-time (JIT) compiler translates high-level Julia code into machine code before execution, which often allows it to run as fast or faster than C or Fortran.
+
+2. **Easy to Learn**: For those familiar with other data science languages, particularly Python or MATLAB, the syntax of Julia is straightforward and easy to pick up.
+
+3. **Parallel and Distributed Computing**: Julia has built-in primitives for parallel and distributed computing, making it easier to scale up data-intensive computations.
+
+4. **Interoperability with Other Languages**: You can call C, Fortran, and Python functions directly from Julia. This makes it easier to leverage existing libraries or migrate gradually from other platforms.
+
+5. **Rich Ecosystem for Data Science**: Julia has several packages designed specifically for data science tasks. Packages such as DataFrames.jl, MLJ.jl, and Flux.jl provide tools for data manipulation, machine learning, and deep learning, respectively.
+
+6. **Type System**: Julia’s flexible type system enables both generic programming, which can make code more readable and reusable, and dispatch on user-defined types, which can optimize performance.
+
+7. **Open Source**: Like R and Python, Julia is open source, meaning that its source code is freely available. This is important for transparency, reproducibility, and community development.
+
+8. **Mathematical Syntax**: Julia's syntax is very friendly for mathematical programming, making it intuitive for translating mathematical models into code.
+
+9. **Community and Growth**: Julia has a rapidly growing community, especially among researchers and academics in the computational sciences. This ensures the continual development of tools, libraries, and support.
+
+10. **Unified Approach**: In some ecosystems, you need to switch languages to go from prototyping (which often requires a more expressive language) to production (which requires a more efficient language). With Julia, the same codebase can serve both purposes.
+
+## Why Tidier?
+
+`Tidier.jl` is a 100% Julia implementation of the popular R `tidyverse` meta-package with the aim to stick as closely as possible to the `tidyverse` syntax. Similar to the R `tidyverse`, `Tidier.jl` re-exports several other packages, each focusing on a specific set of functionalities.
+
+Frankly, becoming proficient with `Tidier.jl` will not make you proficient in Julia as a whole. However, the goal of `Tidier.jl` is to become an entry point into Julia for overall beginners, as well as experienced R developers. 

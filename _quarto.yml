@@ -1,0 +1,42 @@
+project:
+  type: book
+  output-dir: docs
+
+execute:
+  freeze: auto
+  eval: true
+  echo: true
+  warning: true
+  message: false
+  cache: true
+
+jupyter: julia-1.9
+
+book:
+  title: "Tidier Data Science with Julia"
+  author: "Christoph Scheuch"
+  date: "28/08/2023"
+  reader-mode: true
+  chapters:
+    - index.qmd
+    - introduction.qmd
+    - data-visualization.qmd
+    - workflow-basics.qmd
+    - data-transformation.qmd
+    - workflow-code-style.qmd
+    - data-tidying.qmd
+    - workflow-scripts-and-projects.qmd
+    - data-import.qmd
+    - workflow-getting-help.qmd
+    - references.qmd
+
+bibliography: references.bib
+biblio-style: apalike
+link-citations: true
+links-as-notes: true
+
+format:
+  html:
+    theme: cosmo
+    codee-link: true
+    callout-appearance: simple

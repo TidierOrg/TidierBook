@@ -1,0 +1,145 @@
+---
+title: "Data Visualization"
+---
+
+## Introduction
+
+Julia has several systems for creating plots, but `TidierPlots.jl` is the one that stays coloses to the gramma of graphics (GOG) as implemented in `ggplot2`. The GOG is a coherent system for describing and buildings plots with the big advantage that learning one system allows you to apply it in many different settings.
+
+This chapter will teach you how to visualize your data using `TidierPlots.jl`. We will start by creating a simple scatterplot and use that to introduce aesthetic mappings and geometric objects – the fundamental building blocks of the GOG. We will then walk you through visualizing distributions of single variables as well as visualizing relationships between two or more variables. We will finish off with saving your plots and troubleshooting tips.
+
+### Prerequisits
+
+This chapter focuses on `TidierPlots.jl`, one of the core packages of `Tidier.jl`. Load `Tidier.jl` by running:
+
+```{julia}
+using Tidier
+```
+That one line of code loads the `Tidier.jl` collection of pacakges that you will use in almost every data analysis.
+
+If you run this code and get the error message `error`, then you first have to install the package by running:
+
+```{julia}
+Pkg.add("Tidier")
+using TidierData
+```
+
+In addition to `Tidier.jl`, we will also use the `PalmerPenguins.jl` package, which includes a dataset containing body measurements of penguins on three islands in the Palmer Archipelago.
+
+```{julia}
+using PalmerPenguins, DataFrames
+penguins = DataFrame(PalmerPenguins.load())
+```
+
+## First steps
+
+### The `penguins` data frame
+
+```{julia}
+penguins
+```
+
+```{julia}
+@glimpse(penguins)
+```
+
+### Ultimate goal
+
+### Creating a plot
+
+```{julia}
+@ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  @geom_point()
+```
+
+### Adding aesthetics and layers
+
+```{julia}
+# TODO: should automatically omitt rows with missing variables!
+penguins_no_missing = dropmissing(penguins)
+@ggplot(penguins_no_missing, aes(x = flipper_length_mm, y = body_mass_g)) +
+  @geom_point(aes(color = species, shape = species)) +
+  @geom_smooth(method = "lm") +
+  @labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)", y = "Body mass (g)",
+    color = "Species", shape = "Species"
+  )
+```
+
+## Visualizing distributions
+
+### Categorical variables
+
+```{julia}
+@ggplot(penguins, aes(x = species)) +
+  @geom_bar()
+```
+
+### Numerical variables
+
+```{julia}
+# TODO: should automatically omitt rows with missing variables!
+penguins_no_missing = dropmissing(penguins)
+@ggplot(penguins_no_missing, aes(x = body_mass_g)) +
+  @geom_histogram(binwidth = 200)
+```
+
+```{julia}
+#| eval: false
+# TODO: @geom_density() does not exist yet!
+@ggplot(penguins, aes(x = body_mass_g)) +
+  @geom_density()
+```
+
+## Visualizing relationships
+
+### A numerical and a categorical variable
+```{julia}
+@ggplot(penguins, aes(x = species, y = body_mass_g)) +
+  @geom_boxplot()
+```
+
+```{julia}
+#| eval: false
+# TODO: @geom_density() does not exist yet!
+@ggplot(penguins, aes(x = body_mass_g, color = species, fill = species)) +
+  @geom_density(linewidth = 0.75, alpha = 0.5)
+```
+
+### Two numerical variables
+
+```{julia}
+#| eval: false
+# TODO: check why Adelie is missing for all islands but Torgersen
+@ggplot(penguins, aes(x = island, color = species)) +
+  @geom_bar()
+```
+
+```{julia}
+#| eval: false
+# TODO: position = "fill" does not work yet! 
+@ggplot(penguins, aes(x = island, color = species)) +
+  @geom_bar(position = "fill")
+```
+
+## Two numerical variables
+
+```{julia}
+#| eval: false
+# TODO: @facet_wrap() is not defined yet!
+@ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  @geom_point(aes(color = species, shape = species)) +
+  @facet_wrap(~island)
+```
+
+## Saving your plots
+
+```{julia}
+#| eval: false
+# TODO: @ggsave() is not defined yet!
+penguins_plot = @ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  @geom_point()
+@ggsave(penguins_plot, filename = "penguins-plot.png")
+```
