@@ -1,0 +1,162 @@
+---
+# jupyter: julia-1.10
+engine: julia
+---
+
+# Dataframes
+
+Dataframes are one of the most important objects in data science. A dataframe is a table where each row is an observation and each column is a variable.
+
+We will use the Palmer Penguin dataset as a toy example for the remaining of the chapter.
+
+```{julia}
+using DataFrames, PalmerPenguins
+using Tidier
+import DataFramesMeta as DFM
+
+penguins = PalmerPenguins.load() |> DataFrame
+```
+
+::: {.callout-note}
+
+`Dataframes.jl` is the main package for dealing with dataframes in Julia. You can use it directly to manipulate tables, but we also have 2 alternatives: DataFramesMeta and Tidier. 
+
+DataFramesMeta is a collection of macros 
+
+Tidier is inspired by the `tidyverse` ecosystem in R. They use macros to rewrite your code into DataFrames.jl code.
+
+In this book, whenever reasonable, we will show the different approaches in a tabset so you can compare them!
+:::
+
+## Operations
+
+In this chapter, we will see some unary operations on dataframes. These functions take just 1 dataframe. Joins are binary operations and will be seen later.
+
+- *Selecting* is when we select some columns of a dataframe, while keeping all the rows. Example: select the `species` and `sex` columns.
+
+- *Filtering* or *subsetting* is when we select a subset of rows based on some criteria. Example: all male penguins of species Adelie. The output is a dataframe with the exact same columns, but possibly fewer rows.
+
+- *Mutating* is when we create new columns. Example: The body mass in kg is obtained dividing the column `body_mass_g` by 1000.
+
+- *Grouping* is when we split the dataframe into a collection (array) of dataframes using some criteria. Example: grouping by `species` gives us 3 dataframes, each with only one species.
+
+- *Summarising* is when we apply some function to some columns in order to reduce the amount of rows with some kind of summary (like a mean, median, max, and so on). Example: for each `species`, apply the `mean` function to the columns `body_mass_g`. This will yield a dataframe with 3 rows, one for each species. Summarising is usually done after a grouping, so the summary is calculated with relation to each of the groups.
+
+- *Arranging* or *ordering* is when we reorder the rows of a dataframe using some criteria.
+
+Since all these functions return a dataframe (or an array of dataframes, in the case of grouping), we can chain these operations together, with the convention that on grouped dataframes we apply the function in each one of the groups.
+
+Let's see each operation with more details.
+
+## Comparing Tidier with DataFramesMeta
+
+The following table list the operations on each package:
+
+| dplyr       | Tidier       | DataFramesMeta               | DataFrames   |
+|-------------|--------------|------------------------------|--------------|
+| `select`    | `@select`    | `@select`                    | array sintax |
+| `filter`    | `@filter`    | `@subset` / `@rsubset`       | `filter`     |
+| `mutate`    | `@mutate`    | `@transform` / `@rtransform` | array sintax |
+| `group_by`  | `@group_by`  | `@groupby`                   | `groupby`    |
+| `summarise` | `@summarise` | `@combine`                   | `combine`    |
+| `arrange`   | `@arrange`   | `@orderby` / `@rorderby`     | `sort!`      |
+
+
+Notice that we have a name clash with `@select`: that is why we `import DataFramesMeta as DFM` at the beginning.
+
+## Filtering / subsetting
+
+To filter a dataframe in Tidier, we use the macro `@filter`. You can use it in the form
+
+```{julia}
+@filter(penguins, species == "Adelie")
+```
+
+or without parentesis as in 
+
+```{julia}
+@filter penguins species == "Adelie"
+```
+
+Notice that the columns are typed as if they were variables on the Julia environment. This is inspired by the `tidyverse` behaviour of data-masking: inside a tidyverse verb, the columns are taken as "statistical variables" that exist inside the dataframe.
+
+In DataFramesMeta, we have two macros for filtering: `@subset` and `@rsubset`. Use the first when you have some criteria that uses the whole dataframe, for example:
+
+```{julia}
+DFM.@subset penguins :body_mass_g .>= mean(skipmissing(:body_mass_g))
+```
+
+Notice the broadcast on >=. We need it because each *row is interpreted as an array*. Also, notice that we call columns as _symbols_ (i.e. we append `:` to it).
+
+In this case, we need the whole column `body_mass_g` to take the mean and then filter the rows based on that. If, however, your filtering criteria only uses information about each row, then `@rsubset` (row subset) is easier to use: it interprets each columns as a value (not an array), so no broadcasting is needed:
+
+```{julia}
+DFM.@rsubset penguins :species == "Adelie"
+```
+
+In both Tidier and DataFramesMeta, only the rows to which the criteria is `true` are returned. This means that you don't need to worry about `missing` values in cases where the criteria do not return `false` nor `true.
+
+### Filtering with one criteria
+
+Filtering all the rows with `species` = "Adelie".
+
+::: {.panel-tabset}
+
+## Tidier
+
+```{julia}
+@filter penguins species == "Adelie"
+```
+
+## DataFramesMeta
+
+```{julia}
+DFM.@rsubset penguins :species == "Adelie"
+```
+
+## DataFrames
+
+```{julia}
+filter(r -> r.species == "Adelie", penguins)
+```
+
+:::
+
+### Filtering with several criteria
+
+Filtering all the rows with `species` = "Adelie", `sex` = "male" and `body_mass_g` > 4000.
+
+::: {.panel-tabset}
+
+## Tidier
+
+```{julia}
+@filter penguins species == "Adelie" sex == "male" body_mass_g > 4000
+```
+
+## DataFramesMeta
+
+```{julia}
+DFM.@rsubset penguins :species == "Adelie" :sex == "male" :body_mass_g > 4000
+```
+
+## DataFrames
+
+```{julia}
+filter(r -> ((r.species == "Adelie") & (r.sex == "male") & (r.body_mass_g > 4000)) === true, penguins)
+```
+
+:::
+
+
+## Creating columns
+
+::: {.panel-tabset}
+
+## Tidier
+
+## DataFramesMeta
+
+## DataFrames
+
+:::

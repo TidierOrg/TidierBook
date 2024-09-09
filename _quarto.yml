@@ -10,25 +10,34 @@ execute:
   message: false
   cache: true
 
-jupyter: julia-1.9
+jupyter: julia-1.10
 
 book:
   title: "Tidier Data Science with Julia"
-  author: "Christoph Scheuch"
-  date: "28/08/2023"
+  author: "Guilherme Vituri and Christoph Scheuch"
+  date: "15/08/2024"
   reader-mode: true
+  
   chapters:
     - index.qmd
-    - introduction.qmd
-    - data-visualization.qmd
-    - workflow-basics.qmd
-    - data-transformation.qmd
-    - workflow-code-style.qmd
-    - data-tidying.qmd
-    - workflow-scripts-and-projects.qmd
-    - data-import.qmd
-    - workflow-getting-help.qmd
-    - references.qmd
+    - part: "Part 1: Julia basics"
+      chapters: 
+      - dataframes.qmd
+    - part: "Part 2: Manipulating data"
+    - part: "Part 3: Reading data"
+    - part: "Part 4: Plotting data"
+    - part: "Part 5: Applications"
+      chapters:
+        - references.qmd
+      # - introduction.qmd
+    # - data-visualization.qmd
+    # - workflow-basics.qmd
+    # - data-transformation.qmd
+    # - workflow-code-style.qmd
+    # - data-tidying.qmd
+    # - workflow-scripts-and-projects.qmd
+    # - data-import.qmd
+    # - workflow-getting-help.qmd
 
 bibliography: references.bib
 biblio-style: apalike
