@@ -1,0 +1,16 @@
+---
+# jupyter: julia-1.10
+engine: julia
+---
+
+## Creating columns
+
+::: {.panel-tabset}
+
+## Tidier
+
+## DataFramesMeta
+
+## DataFrames
+
+:::

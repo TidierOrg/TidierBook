@@ -1,0 +1,159 @@
+---
+# jupyter: julia-1.10
+engine: julia
+---
+
+# Filtering
+
+```{julia}
+using DataFrames, PalmerPenguins
+using Tidier
+import DataFramesMeta as DFM
+
+penguins = PalmerPenguins.load() |> DataFrame;
+@slice_head(penguins, n = 15)
+```
+
+To filter a dataframe in Tidier, we use the macro `@filter`. You can use it in the form
+
+```{julia}
+@filter(penguins, species == "Adelie")
+```
+
+or without parentesis as in 
+
+```{julia}
+@filter penguins species == "Adelie"
+```
+
+Notice that the columns are typed as if they were variables on the Julia environment. This is inspired by the `tidyverse` behaviour of data-masking: inside a tidyverse verb, the columns are taken as "statistical variables" that exist inside the dataframe as columns.
+
+In DataFramesMeta, we have two macros for filtering: `@subset` and `@rsubset`. Use the first when you have some criteria that uses the whole dataframe, for example:
+
+```{julia}
+DFM.@subset penguins :body_mass_g .>= mean(skipmissing(:body_mass_g))
+```
+
+Notice the broadcast on >=. We need it because *each row is interpreted as an array*. Also, notice that we refer to columns as _symbols_ (i.e. we append `:` to it).
+
+In the above example, we needed the whole column `body_mass_g` to take the mean and then filter the rows based on that. If, however, your filtering criteria only uses information about each row, then `@rsubset` (row subset) is easier to use: it interprets each columns as a value (not an array), so no broadcasting is needed:
+
+```{julia}
+DFM.@rsubset penguins :species == "Adelie"
+```
+
+In both Tidier and DataFramesMeta, only the rows to which the criteria is `true` are returned. This means that you don't need to worry about `missing` values in cases where the criteria do not return `false` nor `true.
+
+## Filtering with one criteria
+
+Filtering all the rows with `species` = "Adelie".
+
+::: {.panel-tabset}
+
+## Tidier
+
+```{julia}
+@filter penguins species == "Adelie"
+```
+
+## DataFramesMeta
+
+```{julia}
+DFM.@rsubset penguins :species == "Adelie"
+```
+
+## DataFrames
+
+```{julia}
+filter(r -> r.species == "Adelie", penguins)
+```
+
+:::
+
+## Filtering with several criteria
+
+Filtering all the rows with `species` = "Adelie", `sex` = "male" and `body_mass_g` > 4000.
+
+::: {.panel-tabset}
+
+## Tidier
+
+```{julia}
+@filter penguins species == "Adelie" sex == "male" body_mass_g > 4000
+```
+
+## DataFramesMeta
+
+```{julia}
+DFM.@rsubset penguins :species == "Adelie" :sex == "male" :body_mass_g > 4000
+```
+
+## DataFrames
+
+```{julia}
+filter(r -> ((r.species == "Adelie") & (r.sex == "male") & (r.body_mass_g > 4000)) === true, penguins)
+```
+
+:::
+
+
+Filtering all the rows where the `flipper_length_mm` is greater than the mean.
+
+::: {.panel-tabset}
+
+## Tidier
+
+```{julia}
+@filter penguins flipper_length_mm > mean(skipmissing(flipper_length_mm))
+```
+
+## DataFramesMeta
+
+```{julia}
+DFM.@subset penguins :flipper_length_mm .>= mean(skipmissing(:flipper_length_mm))
+```
+
+## DataFrames
+
+```{julia}
+filter(r -> (r.flipper_length_mm > mean(skipmissing(penguins.flipper_length_mm))) === true, penguins)
+```
+
+:::
+
+## Filtering with a variable column name
+
+Suppose the column you want to filter is a variable, let's say
+
+```{julia}
+# filter_column = "species"
+column_symbol = :species
+```
+
+::: {.panel-tabset}
+
+## Tidier
+
+```{julia}
+# @chain penguins begin
+#     @filter(!!filter_column == "Adelie")
+#     # @select(!!filter_column)
+# end
+# @filter(penguins, !!filter_column == "Adelie")
+```
+
+## DataFramesMeta
+
+```{julia}
+DFM.@rsubset penguins $column_symbol == "Adelie"
+```
+
+:::
+
+In case the column is a string instead of a symbol, we can write
+
+```{julia}
+column_string = "species"
+
+DFM.@rsubset penguins $(Symbol(column_string)) == "Adelie"
+```

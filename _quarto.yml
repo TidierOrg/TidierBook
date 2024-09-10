@@ -16,14 +16,26 @@ book:
   title: "Tidier Data Science with Julia"
   author: "Guilherme Vituri and Christoph Scheuch"
   date: "15/08/2024"
+  repo-url: https://github.com/vituri/TidierBook2
+
+  page-navigation: true
   reader-mode: true
+  page-footer:
+    left: |
+      This book is part of the <a href="https://github.com/TidierOrg/Tidier.jl">Tidier organization</a>, bringing joy to 
+      data science in Julia.
+    right: |
+      This book was built with <a href="https://quarto.org/">Quarto</a>.
   
   chapters:
     - index.qmd
     - part: "Part 1: Julia basics"
+      # chapters: 
+      # - dataframes.qmd
+    - part: dataframes.qmd
       chapters: 
-      - dataframes.qmd
-    - part: "Part 2: Manipulating data"
+      - dataframes-filtering.qmd
+    # - part: "Part 2: Dataframes"
     - part: "Part 3: Reading data"
     - part: "Part 4: Plotting data"
     - part: "Part 5: Applications"
