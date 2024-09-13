@@ -1,0 +1,19 @@
+---
+# jupyter: julia-1.10
+engine: julia
+---
+
+## Operations on columns
+
+::: {.panel-tabset}
+
+## Tidier
+
+## DataFramesMeta
+
+## DataFrames
+
+:::
+
+## Conditionally mutating columns
+

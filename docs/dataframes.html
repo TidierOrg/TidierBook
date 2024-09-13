@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./dataframes-filtering.html" rel="next">
+<link href="./dataframes-rows.html" rel="next">
 <link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -172,8 +172,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./dataframes-filtering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Filtering</span></span></a>
+  <a href="./dataframes-rows.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Operations on rows</span></span></a>
   </div>
 </li>
       </ul>
@@ -213,8 +213,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#operations" id="toc-operations" class="nav-link active" data-scroll-target="#operations">Operations</a></li>
+  <li><a href="#operations" id="toc-operations" class="nav-link active" data-scroll-target="#operations">Operations</a>
+  <ul class="collapse">
+  <li><a href="#rows-operations" id="toc-rows-operations" class="nav-link" data-scroll-target="#rows-operations">Rows operations</a></li>
+  <li><a href="#column-operations" id="toc-column-operations" class="nav-link" data-scroll-target="#column-operations">Column operations</a></li>
+  <li><a href="#reshaping-operations" id="toc-reshaping-operations" class="nav-link" data-scroll-target="#reshaping-operations">Reshaping operations</a></li>
+  <li><a href="#grouping-operations" id="toc-grouping-operations" class="nav-link" data-scroll-target="#grouping-operations">Grouping operations</a></li>
+  <li><a href="#mixed-operations" id="toc-mixed-operations" class="nav-link" data-scroll-target="#mixed-operations">Mixed operations</a></li>
+  </ul></li>
   <li><a href="#comparing-tidier-with-dataframesmeta" id="toc-comparing-tidier-with-dataframesmeta" class="nav-link" data-scroll-target="#comparing-tidier-with-dataframesmeta">Comparing Tidier with DataFramesMeta</a></li>
+  <li><a href="#chaining-operations" id="toc-chaining-operations" class="nav-link" data-scroll-target="#chaining-operations">Chaining operations</a></li>
   </ul>
 </nav>
     </div>
@@ -244,7 +252,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We will use the Palmer Penguin dataset as a toy example for the remaining of the chapter.</p>
 <div id="2" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span>, <span class="bu">PalmerPenguins</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Tidier</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Tidier</span>, <span class="bu">Chain</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">DataFramesMeta</span> as DFM</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> PalmerPenguins.<span class="fu">load</span>() <span class="op">|&gt;</span> DataFrame</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -548,23 +556,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>Dataframes.jl</code> is the main package for dealing with dataframes in Julia. You can use it directly to manipulate tables, but we also have 2 alternatives: DataFramesMeta and Tidier.</p>
 <p>DataFramesMeta is a collection of macros based on DataFrames.</p>
 <p>Tidier is inspired by the <code>tidyverse</code> ecosystem in R. Tidier use macros to rewrite your code into DataFrames.jl code. Because of this “tidy” heritance, we will often talk about the R packages that inspired the Julia ones (like <code>dplyr</code>, <code>tidyr</code> and many others).</p>
-<p>In this book, whenever possible, we will show the different approaches in a tabset so you can compare them.</p>
+<p>In this book, whenever possible, we will show the different approaches in a tabset so you can compare them, giving more emphasis on Tidier.</p>
 </div>
 </div>
 </div>
 <section id="operations" class="level2">
 <h2 class="anchored" data-anchor-id="operations">Operations</h2>
-<p>Let’s start with some operations that take only one dataframe as input.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Here is the basic terminology:</p>
+<p>Let’s start with some unary operations, ie. operations that take only one dataframe as input and return one dataframe as output.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. We can divide these operations in some categories:</p>
+<section id="rows-operations" class="level3">
+<h3 class="anchored" data-anchor-id="rows-operations">Rows operations</h3>
+<p>These are operations that only affect rows, leaving all columns untouched.</p>
 <ul>
-<li><p><em>Selecting</em> is when we select some columns of a dataframe, while keeping all the rows. Example: select the <code>species</code> and <code>sex</code> columns.</p></li>
 <li><p><em>Filtering</em> or <em>subsetting</em> is when we select a subset of rows based on some criteria. Example: all male penguins of species Adelie. The output is a dataframe with the exact same columns, but possibly fewer rows.</p></li>
-<li><p><em>Mutating</em> or <em>transforming</em> is when we create new columns. Example: a new column <code>body_mass_kg</code> can be obtained dividing the column <code>body_mass_g</code> by 1000.</p></li>
-<li><p><em>Grouping</em> is when we split the dataframe into a collection (array) of dataframes using some criteria. Example: grouping by <code>species</code> gives us 3 dataframes, each with only one species.</p></li>
-<li><p><em>Summarising</em> or <em>combining</em> is when we apply some function to some columns in order to reduce the amount of rows with some kind of summary (like a mean, median, max, and so on). Example: for each <code>species</code>, apply the <code>mean</code> function to the columns <code>body_mass_g</code>. This will yield a dataframe with 3 rows, one for each species. Summarising is usually done after a grouping, so the summary is calculated with relation to each of the groups.</p></li>
 <li><p><em>Arranging</em> or <em>ordering</em> is when we reorder the rows of a dataframe using some criteria.</p></li>
 </ul>
+</section>
+<section id="column-operations" class="level3">
+<h3 class="anchored" data-anchor-id="column-operations">Column operations</h3>
+<p>These are operations that only affect columns, leaving all rows untouched.</p>
+<ul>
+<li><p><em>Selecting</em> is when we select some columns of a dataframe, while keeping all the rows. Example: select the <code>species</code> and <code>sex</code> columns.</p></li>
+<li><p><em>Mutating</em> or <em>transforming</em> is when we create new columns. Example: a new column <code>body_mass_kg</code> can be obtained dividing the column <code>body_mass_g</code> by 1000.</p></li>
+</ul>
+</section>
+<section id="reshaping-operations" class="level3">
+<h3 class="anchored" data-anchor-id="reshaping-operations">Reshaping operations</h3>
+<p>These operations change the shape of a dataframe, making it wider or longer.</p>
+<ul>
+<li><p><code>Widening</code></p></li>
+<li><p><code>Longering</code>?</p></li>
+</ul>
+</section>
+<section id="grouping-operations" class="level3">
+<h3 class="anchored" data-anchor-id="grouping-operations">Grouping operations</h3>
+<ul>
+<li><em>Grouping</em> is when we split the dataframe into a collection (array) of dataframes using some criteria. Example: grouping by <code>species</code> gives us 3 dataframes, each with only one species.</li>
+</ul>
+</section>
+<section id="mixed-operations" class="level3">
+<h3 class="anchored" data-anchor-id="mixed-operations">Mixed operations</h3>
+<p>These operations can possibly change rows and columns at the same time.</p>
+<ul>
+<li>Distinct;</li>
+<li>Counting;</li>
+<li><em>Summarising</em> or <em>combining</em> is when we apply some function to some columns in order to reduce the amount of rows with some kind of summary (like a mean, median, max, and so on). Example: for each <code>species</code>, apply the <code>mean</code> function to the columns <code>body_mass_g</code>. This will yield a dataframe with 3 rows, one for each species. Summarising is usually done after a grouping, so the summary is calculated with relation to each of the groups.</li>
+</ul>
+<p>??? deixar grupo e sumário juntos?</p>
 <p>Since all these functions return a dataframe (or an array of dataframes, in the case of grouping), we can chain these operations together, with the convention that on grouped dataframes we apply the function in each one of the groups.</p>
-<p>Let’s see each operation with more details.</p>
+<p>Now for binary operations (ie. operations that take two dataframes), we have all the joins:</p>
+<ul>
+<li>Left join;</li>
+<li>Right join;</li>
+<li>Inner join;</li>
+<li>Outer join;</li>
+<li>Full join.</li>
+</ul>
+</section>
 </section>
 <section id="comparing-tidier-with-dataframesmeta" class="level2">
 <h2 class="anchored" data-anchor-id="comparing-tidier-with-dataframesmeta">Comparing Tidier with DataFramesMeta</h2>
@@ -586,34 +633,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>select</code></td>
-<td><code>@select</code></td>
-<td><code>@select</code></td>
-<td>array sintax</td>
-</tr>
-<tr class="even">
 <td><code>filter</code></td>
 <td><code>@filter</code></td>
 <td><code>@subset</code> / <code>@rsubset</code></td>
-<td><code>filter</code></td>
-</tr>
-<tr class="odd">
-<td><code>mutate</code></td>
-<td><code>@mutate</code></td>
-<td><code>@transform</code> / <code>@rtransform</code></td>
-<td>array sintax</td>
-</tr>
-<tr class="even">
-<td><code>group_by</code></td>
-<td><code>@group_by</code></td>
-<td><code>@groupby</code></td>
-<td><code>groupby</code></td>
-</tr>
-<tr class="odd">
-<td><code>summarise</code></td>
-<td><code>@summarise</code></td>
-<td><code>@combine</code></td>
-<td><code>combine</code></td>
+<td><code>subset</code></td>
 </tr>
 <tr class="even">
 <td><code>arrange</code></td>
@@ -621,9 +644,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td><code>@orderby</code> / <code>@rorderby</code></td>
 <td><code>sort!</code></td>
 </tr>
+<tr class="odd">
+<td><code>select</code></td>
+<td><code>@select</code></td>
+<td><code>@select</code></td>
+<td>array sintax</td>
+</tr>
+<tr class="even">
+<td><code>mutate</code></td>
+<td><code>@mutate</code></td>
+<td><code>@transform</code> / <code>@rtransform</code></td>
+<td>array sintax</td>
+</tr>
+<tr class="odd">
+<td><code>group_by</code></td>
+<td><code>@group_by</code></td>
+<td><code>@groupby</code></td>
+<td><code>groupby</code></td>
+</tr>
+<tr class="even">
+<td><code>summarise</code></td>
+<td><code>@summarise</code></td>
+<td><code>@combine</code></td>
+<td><code>combine</code></td>
+</tr>
 </tbody>
 </table>
+<p>It is clear that for those coming from <code>R</code>, Tidier will look like the most natural approach.</p>
 <p>Notice that we have a name clash with <code>@select</code>: that is why we <code>import DataFramesMeta as DFM</code> at the beginning.</p>
+<p>We will see each operation with more details in the following chapters.</p>
+</section>
+<section id="chaining-operations" class="level2">
+<h2 class="anchored" data-anchor-id="chaining-operations">Chaining operations</h2>
+<p>We can chain (or pipe) dataframe operations as follows with the <code>@chain</code> macro:</p>
+<div id="4" class="cell" data-execution_count="0">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@chain</span> penguins <span class="cf">begin</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@filter</span> !<span class="fu">ismissing</span>(sex)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@group_by</span> sex</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@summarise</span> mean <span class="op">=</span> <span class="fu">mean</span>(bill_length_mm)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@arrange</span> mean</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>
@@ -1062,8 +1123,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./dataframes-filtering.html" class="pagination-link" aria-label="Filtering">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Filtering</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./dataframes-rows.html" class="pagination-link" aria-label="Operations on rows">
+        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Operations on rows</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
