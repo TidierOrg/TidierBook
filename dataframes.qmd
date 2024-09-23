@@ -128,3 +128,11 @@ We can chain (or pipe) dataframe operations as follows with the `@chain` macro:
     @arrange mean
 end
 ```
+
+## Documentation
+
+https://dataframes.juliadata.org/stable/man/working_with_dataframes/
+
+https://juliadata.org/DataFramesMeta.jl/stable/#@orderby
+
+https://tidierorg.github.io/TidierData.jl/latest/reference/

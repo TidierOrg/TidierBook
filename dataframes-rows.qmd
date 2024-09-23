@@ -14,7 +14,7 @@ penguins = PalmerPenguins.load() |> DataFrame;
 @slice_head(penguins, n = 10)
 ```
 
-## Filtering
+## Filtering (or: throwing lines away)
 
 To filter a dataframe means keeping only the rows that satisfy a certain criteria (ie. a boolean condition).
 
@@ -203,7 +203,7 @@ instead of a symbol, we can write in the same way
 ## Tidier
 
 ```{julia}
-#?? how to do it?
+# @filter(penguins, !!my_column == "Adelie")
 ```
 
 ## DataFramesMeta

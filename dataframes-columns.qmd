@@ -3,15 +3,98 @@
 engine: julia
 ---
 
-## Operations on columns
+# Operations on columns
+
+```{julia}
+using DataFrames, PalmerPenguins
+using Tidier
+import DataFramesMeta as DFM
+
+penguins = PalmerPenguins.load() |> DataFrame;
+@slice_head(penguins, n = 10)
+```
+
+## Selecting (or: throwing columns away)
+
+### Selecting `n` columns
 
 ::: {.panel-tabset}
 
 ## Tidier
 
+```{julia}
+@select penguins species body_mass_g
+```
+
 ## DataFramesMeta
 
+```{julia}
+DFM.@select penguins :species :body_mass_g
+```
+
 ## DataFrames
+
+```{julia}
+DFM.select(penguins, [:species, :body_mass_g])
+```
+
+:::
+
+### Selecting columns from a variable
+
+::: {.panel-tabset}
+
+```{julia}
+my_columns = [:species, :body_mass_g];
+```
+
+## Tidier
+
+```{julia}
+@select penguins !!my_columns
+```
+
+## DataFramesMeta
+
+```{julia}
+DFM.@select penguins $my_columns
+```
+
+## DataFrames
+
+```{julia}
+DFM.select(penguins, my_columns)
+```
+
+:::
+
+## Mutating (or: creating columns)
+
+### Creating one column based on another one
+
+Create the column `body_mass_kg` by dividing `body_mass_g` by 1000.
+
+::: {.panel-tabset}
+
+## Tidier
+
+```{julia}
+@mutate penguins body_mass_kg = body_mass_g / 1000
+```
+
+## DataFramesMeta
+
+```{julia}
+DFM.@rtransform penguins :body_mass_kg = :body_mass_g / 1000
+```
+
+## DataFrames
+
+```{julia}
+penguins2 = copy(penguins);
+penguins.body_mass_kg = penguins.body_mass_g ./ 1000;
+penguins2
+```
 
 :::
 

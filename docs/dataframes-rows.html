@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./references.html" rel="next">
+<link href="./dataframes-columns.html" rel="next">
 <link href="./dataframes.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -176,6 +176,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Operations on rows</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dataframes-columns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Operations on columns</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -213,7 +219,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#filtering" id="toc-filtering" class="nav-link active" data-scroll-target="#filtering"><span class="header-section-number">1.1</span> Filtering</a>
+  <li><a href="#filtering-or-throwing-lines-away" id="toc-filtering-or-throwing-lines-away" class="nav-link active" data-scroll-target="#filtering-or-throwing-lines-away"><span class="header-section-number">1.1</span> Filtering (or: throwing lines away)</a>
   <ul class="collapse">
   <li><a href="#filtering-with-one-criteria" id="toc-filtering-with-one-criteria" class="nav-link" data-scroll-target="#filtering-with-one-criteria"><span class="header-section-number">1.1.1</span> Filtering with one criteria</a></li>
   <li><a href="#filtering-with-several-criteria" id="toc-filtering-with-several-criteria" class="nav-link" data-scroll-target="#filtering-with-several-criteria"><span class="header-section-number">1.1.2</span> Filtering with several criteria</a></li>
@@ -388,8 +394,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<section id="filtering" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="filtering"><span class="header-section-number">1.1</span> Filtering</h2>
+<section id="filtering-or-throwing-lines-away" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="filtering-or-throwing-lines-away"><span class="header-section-number">1.1</span> Filtering (or: throwing lines away)</h2>
 <p>To filter a dataframe means keeping only the rows that satisfy a certain criteria (ie. a boolean condition).</p>
 <p>To filter a dataframe in Tidier, we use the macro <code>@filter</code>. You can use it in the form</p>
 <div id="4" class="cell" data-execution_count="1">
@@ -5761,7 +5767,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content">
 <div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
 <div id="46" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#?? how to do it?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># @filter(penguins, !!my_column == "Adelie")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
@@ -9191,8 +9197,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./dataframes-columns.html" class="pagination-link" aria-label="Operations on columns">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Operations on columns</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

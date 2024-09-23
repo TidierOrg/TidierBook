@@ -35,7 +35,7 @@ book:
     - part: dataframes.qmd
       chapters: 
       - dataframes-rows.qmd
-      # - dataframes-columns.qmd
+      - dataframes-columns.qmd
       # - dataframes-groups.qmd
     # - part: "Part 2: Dataframes"
     - part: "Part 3: Reading data"
