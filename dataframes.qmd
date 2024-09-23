@@ -5,7 +5,17 @@ engine: julia
 
 # Part 2: Dataframes
 
-Dataframes are one of the most important objects in data science. A dataframe is a table where each row is an observation and each column is a variable.
+Dataframes are one of the most important objects in data science. 
+
+A dataframe is a table where each row is an observation and each column is a variable.
+
+::: {.callout}
+A dataframe `df` is a list of vectors, all with the same length.
+
+A column of `df` is just one if its vectors.
+
+The `i-th` row of `df` is the vector formed by the `i-th` coordinate of each of its columns.
+:::
 
 We will use the Palmer Penguin dataset as a toy example for the remaining of the chapter.
 
@@ -18,16 +28,21 @@ import DataFramesMeta as DFM
 penguins = PalmerPenguins.load() |> DataFrame
 ```
 
-::: {.callout-note}
+## Libraries
+
+### Dataframes
 
 `Dataframes.jl` is the main package for dealing with dataframes in Julia. You can use it directly to manipulate tables, but we also have 2 alternatives: DataFramesMeta and Tidier. 
 
-DataFramesMeta is a collection of macros based on DataFrames.
+### DataFramesMeta
+
+DataFramesMeta is a collection of macros based on DataFrames. It provides many syntatic helpers to slice rows, create columns and summarise data.
+
+### Tidier
 
 Tidier is inspired by the `tidyverse` ecosystem in R. Tidier use macros to rewrite your code into DataFrames.jl code. Because of this "tidy" heritance, we will often talk about the R packages that inspired the Julia ones (like `dplyr`, `tidyr` and many others).
 
 In this book, whenever possible, we will show the different approaches in a tabset so you can compare them, giving more emphasis on Tidier.
-:::
 
 ## Operations
 

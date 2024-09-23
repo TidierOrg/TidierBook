@@ -11,12 +11,12 @@ using Tidier
 import DataFramesMeta as DFM
 
 penguins = PalmerPenguins.load() |> DataFrame;
-@slice_head(penguins, n = 15)
+@slice_head(penguins, n = 10)
 ```
 
 ## Filtering
 
-To filter is to keep only the rows that satisfy a certain criteria (ie. a boolean condition).
+To filter a dataframe means keeping only the rows that satisfy a certain criteria (ie. a boolean condition).
 
 To filter a dataframe in Tidier, we use the macro `@filter`. You can use it in the form
 
@@ -38,7 +38,7 @@ In DataFramesMeta, we have two macros for filtering: `@subset` and `@rsubset`. U
 DFM.@subset penguins :body_mass_g .>= mean(skipmissing(:body_mass_g))
 ```
 
-Notice the broadcast on >=. We need it because *each variable is interpreted as an array (the whole column)*. Also, notice that we refer to columns as _symbols_ (i.e. we append `:` to it).
+Notice the broadcast on >=. We need it because *each variable is interpreted as a vector (the whole column)*. Also, notice that we refer to columns as _symbols_ (i.e. we append `:` to it).
 
 In the above example, we needed the whole column `body_mass_g` to take the mean and then filter the rows based on that. If, however, your filtering criteria only uses information about each row (without needing to see it in context of the whole column), then `@rsubset` (row subset) is easier to use: it interprets each columns as a value (not an array), so no broadcasting is needed:
 
@@ -48,7 +48,7 @@ DFM.@rsubset penguins :species == "Adelie"
 
 In both Tidier and DataFramesMeta, only the rows to which the criteria is `true` are returned. This means that `false` and `missing` are thrown away.
 
-In DataFrames, we use the `subset` function, and the criteria is passed with the notation
+In pure DataFrames, we use the `subset` function, and the criteria is passed with the notation
 
 ```{julia}
 #| eval: false
@@ -61,7 +61,7 @@ where `boolean_function` is a boolean (with possibly `missing` values) function 
 
 ### Filtering with one criteria
 
-Filtering all the rows with `species` = "Adelie".
+Filtering all the rows with `species` == "Adelie".
 
 ::: {.panel-tabset}
 
@@ -87,7 +87,7 @@ subset(penguins, :species => x -> x .== "Adelie", skipmissing=true)
 
 ### Filtering with several criteria
 
-Filtering all the rows with `species` = "Adelie", `sex` = "male" and `body_mass_g` > 4000.
+Filtering all the rows with `species` == "Adelie", `sex` == "male" and `body_mass_g` > 4000.
 
 ::: {.panel-tabset}
 
@@ -106,13 +106,18 @@ DFM.@rsubset penguins :species == "Adelie" :sex == "male" :body_mass_g > 4000
 ## DataFrames
 
 ```{julia}
-subset(penguins, [:species, :sex, :body_mass_g] => (x, y, z) -> (x .== "Adelie") .& (y .== "male") .& (z .> 4000), skipmissing=true)
+subset(
+    penguins
+    , [:species, :sex, :body_mass_g] => 
+    (x, y, z) -> (x .== "Adelie") .& (y .== "male") .& (z .> 4000)
+    ,skipmissing=true
+)
 ```
 
 :::
 
 
-Filtering all the rows with `species` = "Adelie" OR `sex` = "male".
+Filtering all the rows with `species` == "Adelie" OR `sex` == "male".
 
 ::: {.panel-tabset}
 
@@ -166,17 +171,10 @@ subset(penguins, :flipper_length_mm => x -> x .> mean(skipmissing(x)), skipmissi
 Suppose the column you want to filter is a variable, let's say
 
 ```{julia}
-my_column = :species
+my_column = :species;
 ```
 
 ::: {.panel-tabset}
-
-## Tidier
-
-```{julia}
-# how to do it??
-# @filter(penguins, !!(my_column) .== "Adelie")
-```
 
 ## DataFramesMeta
 
@@ -195,39 +193,118 @@ subset(penguins, my_column => x -> x .== "Adelie")
 In case the column is a string
 
 ```{julia}
-my_column2 = "species"
+my_column_string = "species";
 ```
 
-instead of a symbol, we can write
+instead of a symbol, we can write in the same way
 
 ::: {.panel-tabset}
+
+## Tidier
+
+```{julia}
+#?? how to do it?
+```
 
 ## DataFramesMeta
 
 ```{julia}
-DFM.@rsubset penguins $(Symbol(my_column2)) == "Adelie"
+DFM.@rsubset penguins $(my_column_string) == "Adelie"
 ```
 
 ## DataFrames
 
 ```{julia}
-subset(penguins, my_column2 => x -> x .== "Adelie")
+subset(penguins, my_column_string => x -> x .== "Adelie")
 ```
 
 :::
 
 ## Arranging
 
-Arranging is when we reorder the rows of a dataframe according to some criteria.
+Arranging is when we reorder the rows of a dataframe according to some columns. The rows are first arranged by the first column, then by the second (if any), and so on. In Tidier, when we want to invert the ordering, just put the column name inside a `desc()` call.
+
+### Arranging by one column
+
+Arrange by `body_mass_g`.
+
+::: {.panel-tabset}
+
+## Tidier
 
 ```{julia}
 @arrange penguins body_mass_g
 ```
 
+## DataFramesMeta
+
 ```{julia}
-@arrange penguins species body_mass_g
+DFM.@orderby penguins :body_mass_g
 ```
+
+## DataFrames
+
+```{julia}
+sort(penguins, :body_mass_g)
+```
+
+:::
+
+### Arranging by two columns, with one reversed
+
+First arrange by `island`, then by reversed `body_mass_g`.
+
+::: {.panel-tabset}
+
+## Tidier
 
 ```{julia}
 @arrange penguins island desc(body_mass_g)
 ```
+
+## DataFramesMeta
+
+```{julia}
+# works only when the reversed column is numeric?
+
+DFM.@orderby penguins :island :body_mass_g .* -1
+```
+
+## DataFrames
+
+```{julia}
+sort(penguins, [order(:island), order(:body_mass_g, rev=true)])
+```
+
+:::
+
+### Arranging by one variable column
+
+Let's arrange the data by the following column:
+
+```{julia}
+my_arrange_column = :body_mass_g;
+```
+
+::: {.panel-tabset}
+
+## Tidier
+
+```{julia}
+#?? how to do it?
+# @arrange penguins !!my_arrange_column
+```
+
+## DataFramesMeta
+
+```{julia}
+DFM.@orderby penguins $my_arrange_column
+```
+
+## DataFrames
+
+```{julia}
+sort(penguins, my_arrange_column)
+```
+
+:::

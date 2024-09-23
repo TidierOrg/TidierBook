@@ -213,7 +213,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#operations" id="toc-operations" class="nav-link active" data-scroll-target="#operations">Operations</a>
+  <li><a href="#libraries" id="toc-libraries" class="nav-link active" data-scroll-target="#libraries">Libraries</a>
+  <ul class="collapse">
+  <li><a href="#dataframes" id="toc-dataframes" class="nav-link" data-scroll-target="#dataframes">Dataframes</a></li>
+  <li><a href="#dataframesmeta" id="toc-dataframesmeta" class="nav-link" data-scroll-target="#dataframesmeta">DataFramesMeta</a></li>
+  <li><a href="#tidier" id="toc-tidier" class="nav-link" data-scroll-target="#tidier">Tidier</a></li>
+  </ul></li>
+  <li><a href="#operations" id="toc-operations" class="nav-link" data-scroll-target="#operations">Operations</a>
   <ul class="collapse">
   <li><a href="#rows-operations" id="toc-rows-operations" class="nav-link" data-scroll-target="#rows-operations">Rows operations</a></li>
   <li><a href="#column-operations" id="toc-column-operations" class="nav-link" data-scroll-target="#column-operations">Column operations</a></li>
@@ -248,7 +254,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Dataframes are one of the most important objects in data science. A dataframe is a table where each row is an observation and each column is a variable.</p>
+<p>Dataframes are one of the most important objects in data science.</p>
+<p>A dataframe is a table where each row is an observation and each column is a variable.</p>
+<div class="callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>A dataframe <code>df</code> is a list of vectors, all with the same length.</p>
+<p>A column of <code>df</code> is just one if its vectors.</p>
+<p>The <code>i-th</code> row of <code>df</code> is the vector formed by the <code>i-th</code> coordinate of each of its columns.</p>
+</div>
+</div>
+</div>
 <p>We will use the Palmer Penguin dataset as a toy example for the remaining of the chapter.</p>
 <div id="2" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span>, <span class="bu">PalmerPenguins</span></span>
@@ -547,19 +566,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
+<section id="libraries" class="level2">
+<h2 class="anchored" data-anchor-id="libraries">Libraries</h2>
+<section id="dataframes" class="level3">
+<h3 class="anchored" data-anchor-id="dataframes">Dataframes</h3>
 <p><code>Dataframes.jl</code> is the main package for dealing with dataframes in Julia. You can use it directly to manipulate tables, but we also have 2 alternatives: DataFramesMeta and Tidier.</p>
-<p>DataFramesMeta is a collection of macros based on DataFrames.</p>
+</section>
+<section id="dataframesmeta" class="level3">
+<h3 class="anchored" data-anchor-id="dataframesmeta">DataFramesMeta</h3>
+<p>DataFramesMeta is a collection of macros based on DataFrames. It provides many syntatic helpers to slice rows, create columns and summarise data.</p>
+</section>
+<section id="tidier" class="level3">
+<h3 class="anchored" data-anchor-id="tidier">Tidier</h3>
 <p>Tidier is inspired by the <code>tidyverse</code> ecosystem in R. Tidier use macros to rewrite your code into DataFrames.jl code. Because of this “tidy” heritance, we will often talk about the R packages that inspired the Julia ones (like <code>dplyr</code>, <code>tidyr</code> and many others).</p>
 <p>In this book, whenever possible, we will show the different approaches in a tabset so you can compare them, giving more emphasis on Tidier.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
 <section id="operations" class="level2">
 <h2 class="anchored" data-anchor-id="operations">Operations</h2>
 <p>Let’s start with some unary operations, ie. operations that take only one dataframe as input and return one dataframe as output.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. We can divide these operations in some categories:</p>
