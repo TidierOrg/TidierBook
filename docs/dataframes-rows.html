@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.1">
+<meta name="generator" content="quarto-1.6.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -71,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-018089954d508eae8a473f0b7f0491f0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5341e04cf592f47685c7d2c736cc69d2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -219,11 +219,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#filtering-or-throwing-lines-away" id="toc-filtering-or-throwing-lines-away" class="nav-link active" data-scroll-target="#filtering-or-throwing-lines-away"><span class="header-section-number">1.1</span> Filtering (or: throwing lines away)</a>
+  <li><a href="#filtering-or-throwing-rows-away" id="toc-filtering-or-throwing-rows-away" class="nav-link active" data-scroll-target="#filtering-or-throwing-rows-away"><span class="header-section-number">1.1</span> Filtering (or: throwing rows away)</a>
   <ul class="collapse">
   <li><a href="#filtering-with-one-criteria" id="toc-filtering-with-one-criteria" class="nav-link" data-scroll-target="#filtering-with-one-criteria"><span class="header-section-number">1.1.1</span> Filtering with one criteria</a></li>
   <li><a href="#filtering-with-several-criteria" id="toc-filtering-with-several-criteria" class="nav-link" data-scroll-target="#filtering-with-several-criteria"><span class="header-section-number">1.1.2</span> Filtering with several criteria</a></li>
-  <li><a href="#filtering-with-a-variable-column-name" id="toc-filtering-with-a-variable-column-name" class="nav-link" data-scroll-target="#filtering-with-a-variable-column-name"><span class="header-section-number">1.1.3</span> Filtering with a variable column name</a></li>
+  <li><a href="#filtering-with-metadata" id="toc-filtering-with-metadata" class="nav-link" data-scroll-target="#filtering-with-metadata"><span class="header-section-number">1.1.3</span> Filtering with metadata</a></li>
+  <li><a href="#filtering-with-a-variable-column-name" id="toc-filtering-with-a-variable-column-name" class="nav-link" data-scroll-target="#filtering-with-a-variable-column-name"><span class="header-section-number">1.1.4</span> Filtering with a variable column name</a></li>
   </ul></li>
   <li><a href="#arranging" id="toc-arranging" class="nav-link" data-scroll-target="#arranging"><span class="header-section-number">1.2</span> Arranging</a>
   <ul class="collapse">
@@ -256,6 +257,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p>In this chapter we will see operations that deal with rows, be it ordering or throwing some rows away.</p>
+<p>The following is necessary to run all examples:</p>
 <div id="2" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span>, <span class="bu">PalmerPenguins</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Tidier</span></span>
@@ -277,7 +280,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -285,7 +288,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -394,10 +397,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<section id="filtering-or-throwing-lines-away" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="filtering-or-throwing-lines-away"><span class="header-section-number">1.1</span> Filtering (or: throwing lines away)</h2>
-<p>To filter a dataframe means keeping only the rows that satisfy a certain criteria (ie. a boolean condition).</p>
-<p>To filter a dataframe in Tidier, we use the macro <code>@filter</code>. You can use it in the form</p>
+<section id="filtering-or-throwing-rows-away" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="filtering-or-throwing-rows-away"><span class="header-section-number">1.1</span> Filtering (or: throwing rows away)</h2>
+<p>To <em>filter</em> a dataframe means keeping only the rows that satisfy a certain criteria (ie. a boolean condition).</p>
+<p>To filter in Tidier, we use the macro <code>@filter</code>. You can use it in the form</p>
 <div id="4" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@filter</span>(penguins, species <span class="op">==</span> <span class="st">"Adelie"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
@@ -414,7 +417,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -422,7 +425,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -708,7 +711,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -716,7 +719,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -1003,7 +1006,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -1011,7 +1014,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -1281,7 +1284,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Notice the broadcast on &gt;=. We need it because <em>each variable is interpreted as a vector (the whole column)</em>. Also, notice that we refer to columns as <em>symbols</em> (i.e.&nbsp;we append <code>:</code> to it).</p>
-<p>In the above example, we needed the whole column <code>body_mass_g</code> to take the mean and then filter the rows based on that. If, however, your filtering criteria only uses information about each row (without needing to see it in context of the whole column), then <code>@rsubset</code> (row subset) is easier to use: it interprets each columns as a value (not an array), so no broadcasting is needed:</p>
+<p>In the above example, we needed the whole column <code>body_mass_g</code> to take the mean and then filter the rows based on that. If, however, your filtering criteria only uses information about each row (without needing to see it in context of the whole column), then <code>@rsubset</code> (<strong>r</strong>ow subset) is easier to use: it interprets each columns as a value (not an array), so no broadcasting is needed:</p>
 <div id="10" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>DFM.<span class="pp">@rsubset</span> penguins <span class="op">:</span>species <span class="op">==</span> <span class="st">"Adelie"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
@@ -1298,7 +1301,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -1306,7 +1309,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -1580,10 +1583,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="12" class="cell" data-execution_count="0">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(penguins, <span class="op">:</span>column <span class="op">=&gt;</span> boolean_function)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>where <code>boolean_function</code> is a boolean (with possibly <code>missing</code> values) function on 1 variable. Add the kwarg <code>skipmissing=true</code> if you want to get rid of missing values.</p>
+<p>where <code>boolean_function</code> is a boolean (with possibly <code>missing</code> values) function on 1 variable (the <code>:column</code> you passed). Add the kwarg <code>skipmissing=true</code> if you want to get rid of missing values.</p>
 <section id="filtering-with-one-criteria" class="level3" data-number="1.1.1">
 <h3 data-number="1.1.1" class="anchored" data-anchor-id="filtering-with-one-criteria"><span class="header-section-number">1.1.1</span> Filtering with one criteria</h3>
-<p>Filtering all the rows with <code>species</code> == “Adelie”.</p>
+<p><strong>Problem:</strong> Filtering all the rows with <code>species</code> == “Adelie”.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Tidier</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">DataFramesMeta</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">DataFrames</a></li></ul>
 <div class="tab-content">
@@ -1604,7 +1607,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -1612,7 +1615,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -1899,7 +1902,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -1907,7 +1910,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -2194,7 +2197,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -2202,7 +2205,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -2477,7 +2480,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="filtering-with-several-criteria" class="level3" data-number="1.1.2">
 <h3 data-number="1.1.2" class="anchored" data-anchor-id="filtering-with-several-criteria"><span class="header-section-number">1.1.2</span> Filtering with several criteria</h3>
-<p>Filtering all the rows with <code>species</code> == “Adelie”, <code>sex</code> == “male” and <code>body_mass_g</code> &gt; 4000.</p>
+<p><strong>Problem:</strong> Filtering all the rows with <code>species</code> == “Adelie”, <code>sex</code> == “male” and <code>body_mass_g</code> &gt; 4000.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Tidier</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">DataFramesMeta</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">DataFrames</a></li></ul>
 <div class="tab-content">
@@ -2498,7 +2501,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -2506,7 +2509,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -2793,7 +2796,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -2801,7 +2804,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -3093,7 +3096,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -3101,7 +3104,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -3373,7 +3376,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Filtering all the rows with <code>species</code> == “Adelie” OR <code>sex</code> == “male”.</p>
+<p><strong>Problem:</strong> Filtering all the rows with <code>species</code> == “Adelie” OR <code>sex</code> == “male”.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Tidier</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">DataFramesMeta</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">DataFrames</a></li></ul>
 <div class="tab-content">
@@ -3394,7 +3397,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -3402,7 +3405,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -3689,7 +3692,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -3697,7 +3700,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -3984,7 +3987,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -3992,7 +3995,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -4264,7 +4267,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Filtering all the rows where the <code>flipper_length_mm</code> is greater than the mean.</p>
+</section>
+<section id="filtering-with-metadata" class="level3" data-number="1.1.3">
+<h3 data-number="1.1.3" class="anchored" data-anchor-id="filtering-with-metadata"><span class="header-section-number">1.1.3</span> Filtering with metadata</h3>
+<p>By metadata here we mean data that is inside the dataframe, as the mean/max/min of a column.</p>
+<p><strong>Problem:</strong> Filtering all the rows where the <code>flipper_length_mm</code> is greater than the mean.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Tidier</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">DataFramesMeta</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false">DataFrames</a></li></ul>
 <div class="tab-content">
@@ -4285,7 +4292,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -4293,7 +4300,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -4580,7 +4587,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -4588,7 +4595,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -4875,7 +4882,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -4883,7 +4890,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -5156,18 +5163,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="filtering-with-a-variable-column-name" class="level3" data-number="1.1.3">
-<h3 data-number="1.1.3" class="anchored" data-anchor-id="filtering-with-a-variable-column-name"><span class="header-section-number">1.1.3</span> Filtering with a variable column name</h3>
-<p>Suppose the column you want to filter is a variable, let’s say</p>
+<section id="filtering-with-a-variable-column-name" class="level3" data-number="1.1.4">
+<h3 data-number="1.1.4" class="anchored" data-anchor-id="filtering-with-a-variable-column-name"><span class="header-section-number">1.1.4</span> Filtering with a variable column name</h3>
+<p>Suppose the column you want to filter is a variable, let’s say a symbol</p>
 <div id="38" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>my_column <span class="op">=</span> <span class="op">:</span>species;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p><strong>Problem:</strong> Filtering all the rows where the column stored in <code>my_column</code> is “Adelie”.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">DataFramesMeta</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">DataFrames</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Tidier</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">DataFramesMeta</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">DataFrames</a></li></ul>
 <div class="tab-content">
 <div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
 <div id="40" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>DFM.<span class="pp">@rsubset</span> penguins <span class="op">$</span>my_column <span class="op">==</span> <span class="st">"Adelie"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@eval</span> <span class="pp">@filter</span> penguins <span class="op">$</span>my_column <span class="op">==</span> <span class="st">"Adelie"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>152×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">127 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -5182,7 +5190,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -5190,7 +5198,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -5462,7 +5470,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
 <div id="42" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(penguins, my_column <span class="op">=&gt;</span> x <span class="op">-&gt;</span> x <span class="op">.==</span> <span class="st">"Adelie"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>DFM.<span class="pp">@rsubset</span> penguins <span class="op">$</span>my_column <span class="op">==</span> <span class="st">"Adelie"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>152×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">127 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -5477,7 +5485,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -5485,7 +5493,302 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">39.1</td>
+<td style="text-align: right;">18.7</td>
+<td style="text-align: right;">181</td>
+<td style="text-align: right;">3750</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">39.5</td>
+<td style="text-align: right;">17.4</td>
+<td style="text-align: right;">186</td>
+<td style="text-align: right;">3800</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">40.3</td>
+<td style="text-align: right;">18.0</td>
+<td style="text-align: right;">195</td>
+<td style="text-align: right;">3250</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">36.7</td>
+<td style="text-align: right;">19.3</td>
+<td style="text-align: right;">193</td>
+<td style="text-align: right;">3450</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">39.3</td>
+<td style="text-align: right;">20.6</td>
+<td style="text-align: right;">190</td>
+<td style="text-align: right;">3650</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">7</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">38.9</td>
+<td style="text-align: right;">17.8</td>
+<td style="text-align: right;">181</td>
+<td style="text-align: right;">3625</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">8</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">39.2</td>
+<td style="text-align: right;">19.6</td>
+<td style="text-align: right;">195</td>
+<td style="text-align: right;">4675</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">9</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">34.1</td>
+<td style="text-align: right;">18.1</td>
+<td style="text-align: right;">193</td>
+<td style="text-align: right;">3475</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">10</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">42.0</td>
+<td style="text-align: right;">20.2</td>
+<td style="text-align: right;">190</td>
+<td style="text-align: right;">4250</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">11</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">37.8</td>
+<td style="text-align: right;">17.1</td>
+<td style="text-align: right;">186</td>
+<td style="text-align: right;">3300</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">12</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">37.8</td>
+<td style="text-align: right;">17.3</td>
+<td style="text-align: right;">180</td>
+<td style="text-align: right;">3700</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">13</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">41.1</td>
+<td style="text-align: right;">17.6</td>
+<td style="text-align: right;">182</td>
+<td style="text-align: right;">3200</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">141</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">40.2</td>
+<td style="text-align: right;">17.1</td>
+<td style="text-align: right;">193</td>
+<td style="text-align: right;">3400</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">142</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">40.6</td>
+<td style="text-align: right;">17.2</td>
+<td style="text-align: right;">187</td>
+<td style="text-align: right;">3475</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">143</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">32.1</td>
+<td style="text-align: right;">15.5</td>
+<td style="text-align: right;">188</td>
+<td style="text-align: right;">3050</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">144</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">40.7</td>
+<td style="text-align: right;">17.0</td>
+<td style="text-align: right;">190</td>
+<td style="text-align: right;">3725</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">145</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">37.3</td>
+<td style="text-align: right;">16.8</td>
+<td style="text-align: right;">192</td>
+<td style="text-align: right;">3000</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">146</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">39.0</td>
+<td style="text-align: right;">18.7</td>
+<td style="text-align: right;">185</td>
+<td style="text-align: right;">3650</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">147</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">39.2</td>
+<td style="text-align: right;">18.6</td>
+<td style="text-align: right;">190</td>
+<td style="text-align: right;">4250</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">148</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">36.6</td>
+<td style="text-align: right;">18.4</td>
+<td style="text-align: right;">184</td>
+<td style="text-align: right;">3475</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">149</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">36.0</td>
+<td style="text-align: right;">17.8</td>
+<td style="text-align: right;">195</td>
+<td style="text-align: right;">3450</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">150</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">37.8</td>
+<td style="text-align: right;">18.1</td>
+<td style="text-align: right;">193</td>
+<td style="text-align: right;">3750</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">151</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">36.0</td>
+<td style="text-align: right;">17.1</td>
+<td style="text-align: right;">187</td>
+<td style="text-align: right;">3700</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">152</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">41.5</td>
+<td style="text-align: right;">18.5</td>
+<td style="text-align: right;">201</td>
+<td style="text-align: right;">4000</td>
+<td style="text-align: left;">male</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
+<div id="44" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(penguins, my_column <span class="op">=&gt;</span> x <span class="op">-&gt;</span> x <span class="op">.==</span> <span class="st">"Adelie"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>152×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">127 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">species</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">island</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">bill_length_mm</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">bill_depth_mm</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">flipper_length_mm</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -5758,21 +6061,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>In case the column is a string</p>
-<div id="44" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>my_column_string <span class="op">=</span> <span class="st">"species"</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="46" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>my_column_string <span class="op">=</span> <span class="st">"species"</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>instead of a symbol, we can write in the same way</p>
+<p>instead of a symbol, we can write in the same way, just taking care in Tidier to convert it to a symbol</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">Tidier</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">DataFramesMeta</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-3" role="tab" aria-controls="tabset-6-3" aria-selected="false">DataFrames</a></li></ul>
 <div class="tab-content">
 <div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
-<div id="46" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># @filter(penguins, !!my_column == "Adelie")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
 <div id="48" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>DFM.<span class="pp">@rsubset</span> penguins <span class="op">$</span>(my_column_string) <span class="op">==</span> <span class="st">"Adelie"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@eval</span> <span class="pp">@filter</span> penguins <span class="op">$</span>(<span class="fu">Symbol</span>(my_column_string)) <span class="op">==</span> <span class="st">"Adelie"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>152×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">127 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -5787,7 +6085,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -5795,7 +6093,302 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">39.1</td>
+<td style="text-align: right;">18.7</td>
+<td style="text-align: right;">181</td>
+<td style="text-align: right;">3750</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">39.5</td>
+<td style="text-align: right;">17.4</td>
+<td style="text-align: right;">186</td>
+<td style="text-align: right;">3800</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">40.3</td>
+<td style="text-align: right;">18.0</td>
+<td style="text-align: right;">195</td>
+<td style="text-align: right;">3250</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">36.7</td>
+<td style="text-align: right;">19.3</td>
+<td style="text-align: right;">193</td>
+<td style="text-align: right;">3450</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">39.3</td>
+<td style="text-align: right;">20.6</td>
+<td style="text-align: right;">190</td>
+<td style="text-align: right;">3650</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">7</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">38.9</td>
+<td style="text-align: right;">17.8</td>
+<td style="text-align: right;">181</td>
+<td style="text-align: right;">3625</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">8</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">39.2</td>
+<td style="text-align: right;">19.6</td>
+<td style="text-align: right;">195</td>
+<td style="text-align: right;">4675</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">9</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">34.1</td>
+<td style="text-align: right;">18.1</td>
+<td style="text-align: right;">193</td>
+<td style="text-align: right;">3475</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">10</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">42.0</td>
+<td style="text-align: right;">20.2</td>
+<td style="text-align: right;">190</td>
+<td style="text-align: right;">4250</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">11</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">37.8</td>
+<td style="text-align: right;">17.1</td>
+<td style="text-align: right;">186</td>
+<td style="text-align: right;">3300</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">12</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">37.8</td>
+<td style="text-align: right;">17.3</td>
+<td style="text-align: right;">180</td>
+<td style="text-align: right;">3700</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">13</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">41.1</td>
+<td style="text-align: right;">17.6</td>
+<td style="text-align: right;">182</td>
+<td style="text-align: right;">3200</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">141</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">40.2</td>
+<td style="text-align: right;">17.1</td>
+<td style="text-align: right;">193</td>
+<td style="text-align: right;">3400</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">142</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">40.6</td>
+<td style="text-align: right;">17.2</td>
+<td style="text-align: right;">187</td>
+<td style="text-align: right;">3475</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">143</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">32.1</td>
+<td style="text-align: right;">15.5</td>
+<td style="text-align: right;">188</td>
+<td style="text-align: right;">3050</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">144</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">40.7</td>
+<td style="text-align: right;">17.0</td>
+<td style="text-align: right;">190</td>
+<td style="text-align: right;">3725</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">145</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">37.3</td>
+<td style="text-align: right;">16.8</td>
+<td style="text-align: right;">192</td>
+<td style="text-align: right;">3000</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">146</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">39.0</td>
+<td style="text-align: right;">18.7</td>
+<td style="text-align: right;">185</td>
+<td style="text-align: right;">3650</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">147</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">39.2</td>
+<td style="text-align: right;">18.6</td>
+<td style="text-align: right;">190</td>
+<td style="text-align: right;">4250</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">148</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">36.6</td>
+<td style="text-align: right;">18.4</td>
+<td style="text-align: right;">184</td>
+<td style="text-align: right;">3475</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">149</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">36.0</td>
+<td style="text-align: right;">17.8</td>
+<td style="text-align: right;">195</td>
+<td style="text-align: right;">3450</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">150</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">37.8</td>
+<td style="text-align: right;">18.1</td>
+<td style="text-align: right;">193</td>
+<td style="text-align: right;">3750</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">151</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">36.0</td>
+<td style="text-align: right;">17.1</td>
+<td style="text-align: right;">187</td>
+<td style="text-align: right;">3700</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">152</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">41.5</td>
+<td style="text-align: right;">18.5</td>
+<td style="text-align: right;">201</td>
+<td style="text-align: right;">4000</td>
+<td style="text-align: left;">male</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<div id="50" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>DFM.<span class="pp">@rsubset</span> penguins <span class="op">$</span>(my_column_string) <span class="op">==</span> <span class="st">"Adelie"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>152×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">127 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">species</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">island</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">bill_length_mm</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">bill_depth_mm</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">flipper_length_mm</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -6066,8 +6659,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div id="tabset-6-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-3-tab">
-<div id="50" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(penguins, my_column_string <span class="op">=&gt;</span> x <span class="op">-&gt;</span> x <span class="op">.==</span> <span class="st">"Adelie"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="52" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(penguins, my_column_string <span class="op">=&gt;</span> x <span class="op">-&gt;</span> x <span class="op">.==</span> <span class="st">"Adelie"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>152×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">127 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -6082,7 +6675,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -6090,7 +6683,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -6366,16 +6959,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="arranging" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="arranging"><span class="header-section-number">1.2</span> Arranging</h2>
-<p>Arranging is when we reorder the rows of a dataframe according to some columns. The rows are first arranged by the first column, then by the second (if any), and so on. In Tidier, when we want to invert the ordering, just put the column name inside a <code>desc()</code> call.</p>
+<p>To <em>arrange</em> a dataframe means to reorder the rows according to the order of some columns. The rows are first arranged by the first column, then by the second (if any), and so on. In Tidier, when we want to invert the ordering, just put the column name inside a <code>desc()</code> call.</p>
 <section id="arranging-by-one-column" class="level3" data-number="1.2.1">
 <h3 data-number="1.2.1" class="anchored" data-anchor-id="arranging-by-one-column"><span class="header-section-number">1.2.1</span> Arranging by one column</h3>
-<p>Arrange by <code>body_mass_g</code>.</p>
+<p><strong>Problem:</strong> Arrange by <code>body_mass_g</code>.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">Tidier</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">DataFramesMeta</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-3" role="tab" aria-controls="tabset-7-3" aria-selected="false">DataFrames</a></li></ul>
 <div class="tab-content">
 <div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
-<div id="52" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@arrange</span> penguins body_mass_g</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="54" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@arrange</span> penguins body_mass_g</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>344×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">319 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -6390,7 +6983,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -6398,7 +6991,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -6669,8 +7262,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
-<div id="54" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>DFM.<span class="pp">@orderby</span> penguins <span class="op">:</span>body_mass_g</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="56" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>DFM.<span class="pp">@orderby</span> penguins <span class="op">:</span>body_mass_g</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>344×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">319 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -6685,7 +7278,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -6693,7 +7286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -6964,8 +7557,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div id="tabset-7-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-3-tab">
-<div id="56" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(penguins, <span class="op">:</span>body_mass_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="58" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(penguins, <span class="op">:</span>body_mass_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>344×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">319 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -6980,7 +7573,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -6988,7 +7581,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -7263,13 +7856,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="arranging-by-two-columns-with-one-reversed" class="level3" data-number="1.2.2">
 <h3 data-number="1.2.2" class="anchored" data-anchor-id="arranging-by-two-columns-with-one-reversed"><span class="header-section-number">1.2.2</span> Arranging by two columns, with one reversed</h3>
-<p>First arrange by <code>island</code>, then by reversed <code>body_mass_g</code>.</p>
+<p><strong>Problem:</strong> First arrange by <code>island</code>, then by reversed <code>body_mass_g</code>.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">Tidier</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false">DataFramesMeta</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-3" role="tab" aria-controls="tabset-8-3" aria-selected="false">DataFrames</a></li></ul>
 <div class="tab-content">
 <div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
-<div id="58" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@arrange</span> penguins island <span class="fu">desc</span>(body_mass_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="60" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@arrange</span> penguins island <span class="fu">desc</span>(body_mass_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>344×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">319 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -7284,7 +7877,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -7292,7 +7885,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -7563,10 +8156,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
-<div id="60" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># works only when the reversed column is numeric?</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>DFM.<span class="pp">@orderby</span> penguins <span class="op">:</span>island <span class="op">:</span>body_mass_g <span class="op">.*</span> <span class="op">-</span><span class="fl">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="62" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># works only when the reversed column is numeric?</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>DFM.<span class="pp">@orderby</span> penguins <span class="op">:</span>island <span class="op">:</span>body_mass_g <span class="op">.*</span> <span class="op">-</span><span class="fl">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>344×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">319 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -7581,7 +8174,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -7589,7 +8182,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -7860,8 +8453,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div id="tabset-8-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-3-tab">
-<div id="62" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(penguins, [<span class="fu">order</span>(<span class="op">:</span>island), <span class="fu">order</span>(<span class="op">:</span>body_mass_g, rev<span class="op">=</span><span class="cn">true</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="64" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(penguins, [<span class="fu">order</span>(<span class="op">:</span>island), <span class="fu">order</span>(<span class="op">:</span>body_mass_g, rev<span class="op">=</span><span class="cn">true</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>344×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">319 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -7876,7 +8469,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -7884,7 +8477,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -8159,22 +8752,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="arranging-by-one-variable-column" class="level3" data-number="1.2.3">
 <h3 data-number="1.2.3" class="anchored" data-anchor-id="arranging-by-one-variable-column"><span class="header-section-number">1.2.3</span> Arranging by one variable column</h3>
-<p>Let’s arrange the data by the following column:</p>
-<div id="64" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>my_arrange_column <span class="op">=</span> <span class="op">:</span>body_mass_g;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Problem:</strong> Arrange by a column stored in a variable <code>my_arrange_column</code>.</p>
+<div id="66" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>my_arrange_column <span class="op">=</span> <span class="op">:</span>body_mass_g;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true">Tidier</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false">DataFramesMeta</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-3" role="tab" aria-controls="tabset-9-3" aria-selected="false">DataFrames</a></li></ul>
 <div class="tab-content">
 <div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
-<div id="66" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#?? how to do it?</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># @arrange penguins !!my_arrange_column</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-<div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
 <div id="68" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>DFM.<span class="pp">@orderby</span> penguins <span class="op">$</span>my_arrange_column</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@eval</span> <span class="pp">@arrange</span> penguins <span class="op">$</span>my_arrange_column</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>344×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">319 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -8189,7 +8776,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -8197,7 +8784,302 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: left;">Chinstrap</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">46.9</td>
+<td style="text-align: right;">16.6</td>
+<td style="text-align: right;">192</td>
+<td style="text-align: right;">2700</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right;">36.5</td>
+<td style="text-align: right;">16.6</td>
+<td style="text-align: right;">181</td>
+<td style="text-align: right;">2850</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right;">36.4</td>
+<td style="text-align: right;">17.1</td>
+<td style="text-align: right;">184</td>
+<td style="text-align: right;">2850</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right;">34.5</td>
+<td style="text-align: right;">18.1</td>
+<td style="text-align: right;">187</td>
+<td style="text-align: right;">2900</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">33.1</td>
+<td style="text-align: right;">16.1</td>
+<td style="text-align: right;">178</td>
+<td style="text-align: right;">2900</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">38.6</td>
+<td style="text-align: right;">17.0</td>
+<td style="text-align: right;">188</td>
+<td style="text-align: right;">2900</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">7</td>
+<td style="text-align: left;">Chinstrap</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">43.2</td>
+<td style="text-align: right;">16.6</td>
+<td style="text-align: right;">187</td>
+<td style="text-align: right;">2900</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">8</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right;">37.9</td>
+<td style="text-align: right;">18.6</td>
+<td style="text-align: right;">193</td>
+<td style="text-align: right;">2925</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">9</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">37.5</td>
+<td style="text-align: right;">18.9</td>
+<td style="text-align: right;">179</td>
+<td style="text-align: right;">2975</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">10</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">37.0</td>
+<td style="text-align: right;">16.9</td>
+<td style="text-align: right;">185</td>
+<td style="text-align: right;">3000</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">11</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Dream</td>
+<td style="text-align: right;">37.3</td>
+<td style="text-align: right;">16.8</td>
+<td style="text-align: right;">192</td>
+<td style="text-align: right;">3000</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">12</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">35.9</td>
+<td style="text-align: right;">16.6</td>
+<td style="text-align: right;">190</td>
+<td style="text-align: right;">3050</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">13</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">35.2</td>
+<td style="text-align: right;">15.9</td>
+<td style="text-align: right;">186</td>
+<td style="text-align: right;">3050</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">333</td>
+<td style="text-align: left;">Gentoo</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right;">48.6</td>
+<td style="text-align: right;">16.0</td>
+<td style="text-align: right;">230</td>
+<td style="text-align: right;">5800</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">334</td>
+<td style="text-align: left;">Gentoo</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right;">48.4</td>
+<td style="text-align: right;">14.6</td>
+<td style="text-align: right;">213</td>
+<td style="text-align: right;">5850</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">335</td>
+<td style="text-align: left;">Gentoo</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right;">49.3</td>
+<td style="text-align: right;">15.7</td>
+<td style="text-align: right;">217</td>
+<td style="text-align: right;">5850</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">336</td>
+<td style="text-align: left;">Gentoo</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right;">55.1</td>
+<td style="text-align: right;">16.0</td>
+<td style="text-align: right;">230</td>
+<td style="text-align: right;">5850</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">337</td>
+<td style="text-align: left;">Gentoo</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right;">45.2</td>
+<td style="text-align: right;">16.4</td>
+<td style="text-align: right;">223</td>
+<td style="text-align: right;">5950</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">338</td>
+<td style="text-align: left;">Gentoo</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right;">49.8</td>
+<td style="text-align: right;">15.9</td>
+<td style="text-align: right;">229</td>
+<td style="text-align: right;">5950</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">339</td>
+<td style="text-align: left;">Gentoo</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right;">51.1</td>
+<td style="text-align: right;">16.3</td>
+<td style="text-align: right;">220</td>
+<td style="text-align: right;">6000</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">340</td>
+<td style="text-align: left;">Gentoo</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right;">48.8</td>
+<td style="text-align: right;">16.2</td>
+<td style="text-align: right;">222</td>
+<td style="text-align: right;">6000</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">341</td>
+<td style="text-align: left;">Gentoo</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right;">59.6</td>
+<td style="text-align: right;">17.0</td>
+<td style="text-align: right;">230</td>
+<td style="text-align: right;">6050</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">342</td>
+<td style="text-align: left;">Gentoo</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right;">49.2</td>
+<td style="text-align: right;">15.2</td>
+<td style="text-align: right;">221</td>
+<td style="text-align: right;">6300</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">343</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">344</td>
+<td style="text-align: left;">Gentoo</td>
+<td style="text-align: left;">Biscoe</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: right; font-style: italic;">missing</td>
+<td style="text-align: left; font-style: italic;">missing</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
+<div id="70" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>DFM.<span class="pp">@orderby</span> penguins <span class="op">$</span>my_arrange_column</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<div><div style="float: left;"><span>344×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">319 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">species</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">island</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">bill_length_mm</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">bill_depth_mm</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">flipper_length_mm</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>
@@ -8468,8 +9350,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div id="tabset-9-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-3-tab">
-<div id="70" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(penguins, my_arrange_column)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="72" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(penguins, my_arrange_column)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>344×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">319 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -8484,7 +9366,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
 </tr>
-<tr class="odd subheader headerLastRow">
+<tr class="subheader headerLastRow even">
 <th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
@@ -8492,7 +9374,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
 </tr>
 </thead>
 <tbody>

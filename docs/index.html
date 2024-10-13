@@ -160,6 +160,12 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Operations on rows</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dataframes-columns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Operations on columns</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -244,18 +250,18 @@ div.csl-indent {
 <p>This is the website for <strong>Tidier Data Science with Julia</strong>, a work-in-progress book heavily inspired by the excellent <strong><a href="https://r4ds.hadley.nz/">R for Data Science</a></strong> by <span class="citation" data-cites="Wickham2023">Wickham, Çetinkaya-Rundel, and Grolemund (<a href="references.html#ref-Wickham2023" role="doc-biblioref">2023</a>)</span>. This book will teach you how to import, transform, visualize, and begin to understand your data. The book aims to give you the skills you need to code for data science. It is suitable for people who have some familiarity with the ideas behind programming and coding, but who don’t yet know how to do data science.</p>
 <section id="why-julia" class="level2">
 <h2 class="anchored" data-anchor-id="why-julia">Why Julia?</h2>
-<p>First released in 2012, Julia is a relatively newer programming language compared to the more established languages like Python and R in the data science community. However, it has quickly gained traction for a variety of reasons. Here are some of the main reasons why Juliad can be considered a good choice for data science:</p>
+<p>First released in 2012, Julia is a relatively newer programming language compared to the more established languages like Python and R in the data science community. However, it has quickly gained traction for a variety of reasons. Here are some of the main reasons why Julia can be considered a good choice for data science:</p>
 <ol type="1">
-<li><p><strong>Performance</strong>: Julia was designed from the ground up to be high performance. Its just-in-time (JIT) compiler translates high-level Julia code into machine code before execution, which often allows it to run as fast or faster than C or Fortran.</p></li>
+<li><p><strong>Performance</strong>: Julia was designed from the ground up to be high performance. Its just-in-time (JIT) compiler translates high-level Julia code into machine code before execution, which often allows it to run as fast (or faster!) than C or Fortran.</p></li>
 <li><p><strong>Easy to Learn</strong>: For those familiar with other data science languages, particularly Python or MATLAB, the syntax of Julia is straightforward and easy to pick up.</p></li>
 <li><p><strong>Parallel and Distributed Computing</strong>: Julia has built-in primitives for parallel and distributed computing, making it easier to scale up data-intensive computations.</p></li>
-<li><p><strong>Interoperability with Other Languages</strong>: You can call C, Fortran, and Python functions directly from Julia. This makes it easier to leverage existing libraries or migrate gradually from other platforms.</p></li>
+<li><p><strong>Interoperability with Other Languages</strong>: You can call C, Fortran, R and Python functions directly from Julia. This makes it easier to leverage existing libraries or migrate gradually from other platforms.</p></li>
 <li><p><strong>Rich Ecosystem for Data Science</strong>: Julia has several packages designed specifically for data science tasks. Packages such as DataFrames.jl, MLJ.jl, and Flux.jl provide tools for data manipulation, machine learning, and deep learning, respectively.</p></li>
 <li><p><strong>Type System</strong>: Julia’s flexible type system enables both generic programming, which can make code more readable and reusable, and dispatch on user-defined types, which can optimize performance.</p></li>
 <li><p><strong>Open Source</strong>: Like R and Python, Julia is open source, meaning that its source code is freely available. This is important for transparency, reproducibility, and community development.</p></li>
 <li><p><strong>Mathematical Syntax</strong>: Julia’s syntax is very friendly for mathematical programming, making it intuitive for translating mathematical models into code.</p></li>
 <li><p><strong>Community and Growth</strong>: Julia has a rapidly growing community, especially among researchers and academics in the computational sciences. This ensures the continual development of tools, libraries, and support.</p></li>
-<li><p><strong>Unified Approach</strong>: In some ecosystems, you need to switch languages to go from prototyping (which often requires a more expressive language) to production (which requires a more efficient language). With Julia, the same codebase can serve both purposes.</p></li>
+<li><p><strong>Unified Approach</strong>: In some ecosystems, you need to switch languages to go from prototyping (which often requires a more expressive language) to production (which requires a more efficient language), which is known as the <a href="https://discourse.julialang.org/t/two-language-problem-what-is-it/82925">two language problem</a>. With Julia, the same codebase can serve both purposes.</p></li>
 </ol>
 </section>
 <section id="why-tidier" class="level2">

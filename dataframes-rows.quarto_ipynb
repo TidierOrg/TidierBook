@@ -1,0 +1,772 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "jupyter: julia-1.10\n",
+        "# engine: julia\n",
+        "---\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "# Operations on rows\n"
+      ],
+      "id": "ea5be365"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "using DataFrames, PalmerPenguins\n",
+        "using Tidier\n",
+        "import DataFramesMeta as DFM\n",
+        "\n",
+        "penguins = PalmerPenguins.load() |> DataFrame;\n",
+        "@slice_head(penguins, n = 10)"
+      ],
+      "id": "4e698924",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Filtering (or: throwing lines away)\n",
+        "\n",
+        "To filter a dataframe means keeping only the rows that satisfy a certain criteria (ie. a boolean condition).\n",
+        "\n",
+        "To filter a dataframe in Tidier, we use the macro `@filter`. You can use it in the form\n"
+      ],
+      "id": "8abe75b9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "@filter(penguins, species == \"Adelie\")"
+      ],
+      "id": "861ae2cd",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "or without parentesis as in \n"
+      ],
+      "id": "9c978b03"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "@filter penguins species == \"Adelie\""
+      ],
+      "id": "5fc51708",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Notice that the columns are typed as if they were variables on the Julia environment. This is inspired by the `tidyverse` behaviour of data-masking: inside a tidyverse verb, the columns are taken as \"statistical variables\" that exist inside the dataframe as columns.\n",
+        "\n",
+        "In DataFramesMeta, we have two macros for filtering: `@subset` and `@rsubset`. Use the first when you have some criteria that uses a whole column, for example:\n"
+      ],
+      "id": "c749e8e7"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "DFM.@subset penguins :body_mass_g .>= mean(skipmissing(:body_mass_g))"
+      ],
+      "id": "5674e7ca",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Notice the broadcast on >=. We need it because *each variable is interpreted as a vector (the whole column)*. Also, notice that we refer to columns as _symbols_ (i.e. we append `:` to it).\n",
+        "\n",
+        "In the above example, we needed the whole column `body_mass_g` to take the mean and then filter the rows based on that. If, however, your filtering criteria only uses information about each row (without needing to see it in context of the whole column), then `@rsubset` (row subset) is easier to use: it interprets each columns as a value (not an array), so no broadcasting is needed:\n"
+      ],
+      "id": "650f2341"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "DFM.@rsubset penguins :species == \"Adelie\""
+      ],
+      "id": "165e3e30",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "In both Tidier and DataFramesMeta, only the rows to which the criteria is `true` are returned. This means that `false` and `missing` are thrown away.\n",
+        "\n",
+        "In pure DataFrames, we use the `subset` function, and the criteria is passed with the notation\n"
+      ],
+      "id": "c19e21d8"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "\n",
+        "subset(penguins, :column => boolean_function)"
+      ],
+      "id": "e52816cb",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "where `boolean_function` is a boolean (with possibly `missing` values) function on 1 variable (the `:column` you passed). Add the kwarg `skipmissing=true` if you want to get rid of missing values.\n",
+        "\n",
+        "### Filtering with one criteria\n",
+        "\n",
+        "Filtering all the rows with `species` == \"Adelie\".\n",
+        "\n",
+        "::: {.panel-tabset}\n",
+        "\n",
+        "## Tidier\n"
+      ],
+      "id": "ebcd6346"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "@filter penguins species == \"Adelie\""
+      ],
+      "id": "7fb1666d",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFramesMeta\n"
+      ],
+      "id": "e8f686ea"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "DFM.@rsubset penguins :species == \"Adelie\""
+      ],
+      "id": "95c17061",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFrames\n"
+      ],
+      "id": "fa2c5547"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "subset(penguins, :species => x -> x .== \"Adelie\", skipmissing=true)"
+      ],
+      "id": "6fb2812e",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        "### Filtering with several criteria\n",
+        "\n",
+        "Filtering all the rows with `species` == \"Adelie\", `sex` == \"male\" and `body_mass_g` > 4000.\n",
+        "\n",
+        "::: {.panel-tabset}\n",
+        "\n",
+        "## Tidier\n"
+      ],
+      "id": "09049eb9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "@filter penguins species == \"Adelie\" sex == \"male\" body_mass_g > 4000"
+      ],
+      "id": "11d29a51",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFramesMeta\n"
+      ],
+      "id": "0ce455c1"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "DFM.@rsubset penguins :species == \"Adelie\" :sex == \"male\" :body_mass_g > 4000"
+      ],
+      "id": "cb5749ba",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFrames\n"
+      ],
+      "id": "df8f2354"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "subset(\n",
+        "    penguins\n",
+        "    , [:species, :sex, :body_mass_g] => \n",
+        "    (x, y, z) -> (x .== \"Adelie\") .& (y .== \"male\") .& (z .> 4000)\n",
+        "    ,skipmissing=true\n",
+        ")"
+      ],
+      "id": "7599d3f0",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        "\n",
+        "Filtering all the rows with `species` == \"Adelie\" OR `sex` == \"male\".\n",
+        "\n",
+        "::: {.panel-tabset}\n",
+        "\n",
+        "## Tidier\n"
+      ],
+      "id": "db002280"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "@filter penguins (species == \"Adelie\") | (sex == \"male\")"
+      ],
+      "id": "d28e9318",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFramesMeta\n"
+      ],
+      "id": "b3d63fe1"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "DFM.@rsubset penguins (:species == \"Adelie\") | (:sex == \"male\")"
+      ],
+      "id": "9276b145",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFrames\n"
+      ],
+      "id": "e7096279"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "subset(penguins, [:species, :sex] => (x, y) -> (x .== \"Adelie\") .| (y .== \"male\"), skipmissing=true)"
+      ],
+      "id": "a0668fa9",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        "\n",
+        "Filtering all the rows where the `flipper_length_mm` is greater than the mean.\n",
+        "\n",
+        "::: {.panel-tabset}\n",
+        "\n",
+        "## Tidier\n"
+      ],
+      "id": "2a22c3ed"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "@filter penguins flipper_length_mm > mean(skipmissing(flipper_length_mm))"
+      ],
+      "id": "a5ddbae0",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFramesMeta\n"
+      ],
+      "id": "be93d74e"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "DFM.@subset penguins :flipper_length_mm .>= mean(skipmissing(:flipper_length_mm))"
+      ],
+      "id": "8d8d6b77",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFrames\n"
+      ],
+      "id": "57b2b239"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "subset(penguins, :flipper_length_mm => x -> x .> mean(skipmissing(x)), skipmissing=true)"
+      ],
+      "id": "9ed74597",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        "### Filtering with a variable column name\n",
+        "\n",
+        "Suppose the column you want to filter is a variable, let's say a symbol\n"
+      ],
+      "id": "33256162"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "my_column = :species;"
+      ],
+      "id": "493c5c7a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "::: {.panel-tabset}\n",
+        "\n",
+        "## Tidier\n"
+      ],
+      "id": "15661579"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "@eval @filter penguins $my_column == \"Adelie\""
+      ],
+      "id": "b3965259",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFramesMeta\n"
+      ],
+      "id": "c07f6b56"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "DFM.@rsubset penguins $my_column == \"Adelie\""
+      ],
+      "id": "4624b99a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFrames\n"
+      ],
+      "id": "fcbfbc4b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "subset(penguins, my_column => x -> x .== \"Adelie\")"
+      ],
+      "id": "7066efde",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        "In case the column is a string\n"
+      ],
+      "id": "c83c792f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "my_column_string = \"species\";"
+      ],
+      "id": "756fd48f",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "instead of a symbol, we can write in the same way, just taking care in Tidier to convert it to a symbol\n",
+        "\n",
+        "::: {.panel-tabset}\n",
+        "\n",
+        "## Tidier\n"
+      ],
+      "id": "53362155"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "@eval @filter penguins $(Symbol(my_column_string)) == \"Adelie\""
+      ],
+      "id": "0df46c80",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFramesMeta\n"
+      ],
+      "id": "38820cc4"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "DFM.@rsubset penguins $(my_column_string) == \"Adelie\""
+      ],
+      "id": "642a18a8",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFrames\n"
+      ],
+      "id": "ed35fc5d"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "subset(penguins, my_column_string => x -> x .== \"Adelie\")"
+      ],
+      "id": "38af65d1",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        "## Arranging\n",
+        "\n",
+        "Arranging is when we reorder the rows of a dataframe according to some columns. The rows are first arranged by the first column, then by the second (if any), and so on. In Tidier, when we want to invert the ordering, just put the column name inside a `desc()` call.\n",
+        "\n",
+        "### Arranging by one column\n",
+        "\n",
+        "Arrange by `body_mass_g`.\n",
+        "\n",
+        "::: {.panel-tabset}\n",
+        "\n",
+        "## Tidier\n"
+      ],
+      "id": "791c4586"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "@arrange penguins body_mass_g"
+      ],
+      "id": "39a99cf6",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFramesMeta\n"
+      ],
+      "id": "a5fe4174"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "DFM.@orderby penguins :body_mass_g"
+      ],
+      "id": "548845b3",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFrames\n"
+      ],
+      "id": "f866a4c9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "sort(penguins, :body_mass_g)"
+      ],
+      "id": "0153f423",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        "### Arranging by two columns, with one reversed\n",
+        "\n",
+        "First arrange by `island`, then by reversed `body_mass_g`.\n",
+        "\n",
+        "::: {.panel-tabset}\n",
+        "\n",
+        "## Tidier\n"
+      ],
+      "id": "0cc1eafa"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "@arrange penguins island desc(body_mass_g)"
+      ],
+      "id": "0316cc75",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFramesMeta\n"
+      ],
+      "id": "c4d5ad8a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# works only when the reversed column is numeric?\n",
+        "\n",
+        "DFM.@orderby penguins :island :body_mass_g .* -1"
+      ],
+      "id": "337343f4",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFrames\n"
+      ],
+      "id": "e77d71e7"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "sort(penguins, [order(:island), order(:body_mass_g, rev=true)])"
+      ],
+      "id": "3a7cc7c7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::\n",
+        "\n",
+        "### Arranging by one variable column\n",
+        "\n",
+        "Let's arrange the data by the following column:\n"
+      ],
+      "id": "0bcd783c"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "my_arrange_column = :body_mass_g;"
+      ],
+      "id": "a8236e40",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "::: {.panel-tabset}\n",
+        "\n",
+        "## Tidier\n"
+      ],
+      "id": "6c69980b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "@eval @arrange penguins $my_arrange_column"
+      ],
+      "id": "900bfcb2",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFramesMeta\n"
+      ],
+      "id": "a05a1200"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "DFM.@orderby penguins $my_arrange_column"
+      ],
+      "id": "874ac5cd",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## DataFrames\n"
+      ],
+      "id": "1889a601"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "sort(penguins, my_arrange_column)"
+      ],
+      "id": "5e0515a5",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        ":::"
+      ],
+      "id": "fac2f7e2"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "julia-1.10",
+      "language": "julia",
+      "display_name": "Julia 1.10.4",
+      "path": "/home/vituri/.local/share/jupyter/kernels/julia-1.10"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

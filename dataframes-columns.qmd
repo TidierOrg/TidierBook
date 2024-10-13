@@ -18,6 +18,8 @@ penguins = PalmerPenguins.load() |> DataFrame;
 
 ### Selecting `n` columns
 
+**Problem:** Select only some columns.
+
 ::: {.panel-tabset}
 
 ## Tidier
@@ -42,6 +44,8 @@ DFM.select(penguins, [:species, :body_mass_g])
 
 ### Selecting columns from a variable
 
+**Problem:** Select only some columns whose names are stored in a variable.
+
 ::: {.panel-tabset}
 
 ```{julia}
@@ -51,7 +55,7 @@ my_columns = [:species, :body_mass_g];
 ## Tidier
 
 ```{julia}
-@select penguins !!my_columns
+@eval @select penguins $my_columns...
 ```
 
 ## DataFramesMeta
@@ -72,7 +76,7 @@ DFM.select(penguins, my_columns)
 
 ### Creating one column based on another one
 
-Create the column `body_mass_kg` by dividing `body_mass_g` by 1000.
+**Problem:** Create the column `body_mass_kg` by dividing `body_mass_g` by 1000.
 
 ::: {.panel-tabset}
 

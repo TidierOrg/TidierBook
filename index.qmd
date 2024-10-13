@@ -4,15 +4,15 @@ This is the website for **Tidier Data Science with Julia**, a work-in-progress b
 
 ## Why Julia?
 
-First released in 2012, Julia is a relatively newer programming language compared to the more established languages like Python and R in the data science community. However, it has quickly gained traction for a variety of reasons. Here are some of the main reasons why Juliad can be considered a good choice for data science:
+First released in 2012, Julia is a relatively newer programming language compared to the more established languages like Python and R in the data science community. However, it has quickly gained traction for a variety of reasons. Here are some of the main reasons why Julia can be considered a good choice for data science:
 
-1. **Performance**: Julia was designed from the ground up to be high performance. Its just-in-time (JIT) compiler translates high-level Julia code into machine code before execution, which often allows it to run as fast or faster than C or Fortran.
+1. **Performance**: Julia was designed from the ground up to be high performance. Its just-in-time (JIT) compiler translates high-level Julia code into machine code before execution, which often allows it to run as fast (or faster!) than C or Fortran.
 
 2. **Easy to Learn**: For those familiar with other data science languages, particularly Python or MATLAB, the syntax of Julia is straightforward and easy to pick up.
 
 3. **Parallel and Distributed Computing**: Julia has built-in primitives for parallel and distributed computing, making it easier to scale up data-intensive computations.
 
-4. **Interoperability with Other Languages**: You can call C, Fortran, and Python functions directly from Julia. This makes it easier to leverage existing libraries or migrate gradually from other platforms.
+4. **Interoperability with Other Languages**: You can call C, Fortran, R and Python functions directly from Julia. This makes it easier to leverage existing libraries or migrate gradually from other platforms.
 
 5. **Rich Ecosystem for Data Science**: Julia has several packages designed specifically for data science tasks. Packages such as DataFrames.jl, MLJ.jl, and Flux.jl provide tools for data manipulation, machine learning, and deep learning, respectively.
 
@@ -24,7 +24,7 @@ First released in 2012, Julia is a relatively newer programming language compare
 
 9. **Community and Growth**: Julia has a rapidly growing community, especially among researchers and academics in the computational sciences. This ensures the continual development of tools, libraries, and support.
 
-10. **Unified Approach**: In some ecosystems, you need to switch languages to go from prototyping (which often requires a more expressive language) to production (which requires a more efficient language). With Julia, the same codebase can serve both purposes.
+10. **Unified Approach**: In some ecosystems, you need to switch languages to go from prototyping (which often requires a more expressive language) to production (which requires a more efficient language), which is known as the [two language problem](https://discourse.julialang.org/t/two-language-problem-what-is-it/82925). With Julia, the same codebase can serve both purposes.
 
 ## Why Tidier?
 

@@ -5,6 +5,10 @@ engine: julia
 
 # Operations on rows
 
+In this chapter we will see operations that deal with rows, be it ordering or throwing some rows away.
+
+The following is necessary to run all examples:
+
 ```{julia}
 using DataFrames, PalmerPenguins
 using Tidier
@@ -14,11 +18,11 @@ penguins = PalmerPenguins.load() |> DataFrame;
 @slice_head(penguins, n = 10)
 ```
 
-## Filtering (or: throwing lines away)
+## Filtering (or: throwing rows away)
 
-To filter a dataframe means keeping only the rows that satisfy a certain criteria (ie. a boolean condition).
+To *filter* a dataframe means keeping only the rows that satisfy a certain criteria (ie. a boolean condition).
 
-To filter a dataframe in Tidier, we use the macro `@filter`. You can use it in the form
+To filter in Tidier, we use the macro `@filter`. You can use it in the form
 
 ```{julia}
 @filter(penguins, species == "Adelie")
@@ -40,7 +44,7 @@ DFM.@subset penguins :body_mass_g .>= mean(skipmissing(:body_mass_g))
 
 Notice the broadcast on >=. We need it because *each variable is interpreted as a vector (the whole column)*. Also, notice that we refer to columns as _symbols_ (i.e. we append `:` to it).
 
-In the above example, we needed the whole column `body_mass_g` to take the mean and then filter the rows based on that. If, however, your filtering criteria only uses information about each row (without needing to see it in context of the whole column), then `@rsubset` (row subset) is easier to use: it interprets each columns as a value (not an array), so no broadcasting is needed:
+In the above example, we needed the whole column `body_mass_g` to take the mean and then filter the rows based on that. If, however, your filtering criteria only uses information about each row (without needing to see it in context of the whole column), then `@rsubset` (**r**ow subset) is easier to use: it interprets each columns as a value (not an array), so no broadcasting is needed:
 
 ```{julia}
 DFM.@rsubset penguins :species == "Adelie"
@@ -57,11 +61,11 @@ subset(penguins, :column => boolean_function)
 
 ```
 
-where `boolean_function` is a boolean (with possibly `missing` values) function on 1 variable. Add the kwarg `skipmissing=true` if you want to get rid of missing values.
+where `boolean_function` is a boolean (with possibly `missing` values) function on 1 variable (the `:column` you passed). Add the kwarg `skipmissing=true` if you want to get rid of missing values.
 
 ### Filtering with one criteria
 
-Filtering all the rows with `species` == "Adelie".
+**Problem:** Filtering all the rows with `species` == "Adelie".
 
 ::: {.panel-tabset}
 
@@ -87,7 +91,7 @@ subset(penguins, :species => x -> x .== "Adelie", skipmissing=true)
 
 ### Filtering with several criteria
 
-Filtering all the rows with `species` == "Adelie", `sex` == "male" and `body_mass_g` > 4000.
+**Problem:** Filtering all the rows with `species` == "Adelie", `sex` == "male" and `body_mass_g` > 4000.
 
 ::: {.panel-tabset}
 
@@ -116,8 +120,7 @@ subset(
 
 :::
 
-
-Filtering all the rows with `species` == "Adelie" OR `sex` == "male".
+**Problem:** Filtering all the rows with `species` == "Adelie" OR `sex` == "male".
 
 ::: {.panel-tabset}
 
@@ -141,8 +144,11 @@ subset(penguins, [:species, :sex] => (x, y) -> (x .== "Adelie") .| (y .== "male"
 
 :::
 
+### Filtering with metadata
 
-Filtering all the rows where the `flipper_length_mm` is greater than the mean.
+By metadata here we mean data that is inside the dataframe, as the mean/max/min of a column.
+
+**Problem:** Filtering all the rows where the `flipper_length_mm` is greater than the mean.
 
 ::: {.panel-tabset}
 
@@ -168,13 +174,21 @@ subset(penguins, :flipper_length_mm => x -> x .> mean(skipmissing(x)), skipmissi
 
 ### Filtering with a variable column name
 
-Suppose the column you want to filter is a variable, let's say
+Suppose the column you want to filter is a variable, let's say a symbol
 
 ```{julia}
 my_column = :species;
 ```
 
+**Problem:** Filtering all the rows where the column stored in `my_column` is "Adelie".
+
 ::: {.panel-tabset}
+
+## Tidier
+
+```{julia}
+@eval @filter penguins $my_column == "Adelie"
+```
 
 ## DataFramesMeta
 
@@ -196,15 +210,16 @@ In case the column is a string
 my_column_string = "species";
 ```
 
-instead of a symbol, we can write in the same way
+instead of a symbol, we can write in the same way, just taking care in Tidier to convert it to a symbol
 
 ::: {.panel-tabset}
 
 ## Tidier
 
 ```{julia}
-# @filter(penguins, !!my_column == "Adelie")
+@eval @filter penguins $(Symbol(my_column_string)) == "Adelie"
 ```
+
 
 ## DataFramesMeta
 
@@ -222,11 +237,11 @@ subset(penguins, my_column_string => x -> x .== "Adelie")
 
 ## Arranging
 
-Arranging is when we reorder the rows of a dataframe according to some columns. The rows are first arranged by the first column, then by the second (if any), and so on. In Tidier, when we want to invert the ordering, just put the column name inside a `desc()` call.
+To *arrange* a dataframe means to reorder the rows according to the order of some columns. The rows are first arranged by the first column, then by the second (if any), and so on. In Tidier, when we want to invert the ordering, just put the column name inside a `desc()` call.
 
 ### Arranging by one column
 
-Arrange by `body_mass_g`.
+**Problem:** Arrange by `body_mass_g`.
 
 ::: {.panel-tabset}
 
@@ -252,7 +267,7 @@ sort(penguins, :body_mass_g)
 
 ### Arranging by two columns, with one reversed
 
-First arrange by `island`, then by reversed `body_mass_g`.
+**Problem:** First arrange by `island`, then by reversed `body_mass_g`.
 
 ::: {.panel-tabset}
 
@@ -280,7 +295,7 @@ sort(penguins, [order(:island), order(:body_mass_g, rev=true)])
 
 ### Arranging by one variable column
 
-Let's arrange the data by the following column:
+**Problem:** Arrange by a column stored in a variable `my_arrange_column`.
 
 ```{julia}
 my_arrange_column = :body_mass_g;
@@ -291,8 +306,7 @@ my_arrange_column = :body_mass_g;
 ## Tidier
 
 ```{julia}
-#?? how to do it?
-# @arrange penguins !!my_arrange_column
+@eval @arrange penguins $my_arrange_column
 ```
 
 ## DataFramesMeta

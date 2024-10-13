@@ -129,10 +129,26 @@ We can chain (or pipe) dataframe operations as follows with the `@chain` macro:
 end
 ```
 
+## Using variables as column names
+
+In Tidier, using the column names as if they were variables in the environment leads to some complication when we want to use other variables that are not column names.
+
+For example, suppose you want to arrange penguins by a column that is stored in a variable.
+
+When this happens, we add `@eval` before the Tidier code and add a `$` to force evaluation of the variable, as in the following example:
+
+```{julia}
+#| eval: false
+my_arrange_column = :body_mass_g;
+
+@eval @arrange penguins $my_arrange_column
+```
+
+
 ## Documentation
 
 https://dataframes.juliadata.org/stable/man/working_with_dataframes/
 
-https://juliadata.org/DataFramesMeta.jl/stable/#@orderby
+https://juliadata.org/DataFramesMeta.jl/stable
 
 https://tidierorg.github.io/TidierData.jl/latest/reference/
