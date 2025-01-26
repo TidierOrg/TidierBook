@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.13">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1&nbsp; What is a dataframe? – Tidier Data Science with Julia</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./dataframes-rows.html" rel="next">
+<link href="./index.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-66ab7fd5e73b7f0a764e0d49b3e29ab1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-66433ebe633adaf0b06ce5767fdf2f08.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./dataframes-whatis.html">Part 2: Dataframes</a></li><li class="breadcrumb-item"><a href="./dataframes-whatis.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is a dataframe?</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Tidier Data Science with Julia</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/vituri/TidierBook2" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Part 1: Julia basics</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part 2: Dataframes</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dataframes-whatis.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is a dataframe?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dataframes-rows.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Operations on rows</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dataframes-columns.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Operations on columns</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Part 3: Reading data</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Part 4: Plotting data</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part 5: Applications</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#basic-manipulation-of-dataframes" id="toc-basic-manipulation-of-dataframes" class="nav-link active" data-scroll-target="#basic-manipulation-of-dataframes"><span class="header-section-number">1.1</span> Basic manipulation of dataframes</a>
+  <ul class="collapse">
+  <li><a href="#columns" id="toc-columns" class="nav-link" data-scroll-target="#columns"><span class="header-section-number">1.1.1</span> Columns</a></li>
+  </ul></li>
+  <li><a href="#libraries" id="toc-libraries" class="nav-link" data-scroll-target="#libraries"><span class="header-section-number">1.2</span> Libraries</a>
+  <ul class="collapse">
+  <li><a href="#dataframes" id="toc-dataframes" class="nav-link" data-scroll-target="#dataframes"><span class="header-section-number">1.2.1</span> Dataframes</a></li>
+  <li><a href="#dataframesmeta" id="toc-dataframesmeta" class="nav-link" data-scroll-target="#dataframesmeta"><span class="header-section-number">1.2.2</span> DataFramesMeta</a></li>
+  <li><a href="#tidierdata" id="toc-tidierdata" class="nav-link" data-scroll-target="#tidierdata"><span class="header-section-number">1.2.3</span> TidierData</a></li>
+  </ul></li>
+  <li><a href="#operations" id="toc-operations" class="nav-link" data-scroll-target="#operations"><span class="header-section-number">1.3</span> Operations</a>
+  <ul class="collapse">
+  <li><a href="#row-operations" id="toc-row-operations" class="nav-link" data-scroll-target="#row-operations"><span class="header-section-number">1.3.1</span> Row operations</a></li>
+  <li><a href="#column-operations" id="toc-column-operations" class="nav-link" data-scroll-target="#column-operations"><span class="header-section-number">1.3.2</span> Column operations</a></li>
+  <li><a href="#reshaping-operations" id="toc-reshaping-operations" class="nav-link" data-scroll-target="#reshaping-operations"><span class="header-section-number">1.3.3</span> Reshaping operations</a></li>
+  <li><a href="#grouping-operations" id="toc-grouping-operations" class="nav-link" data-scroll-target="#grouping-operations"><span class="header-section-number">1.3.4</span> Grouping operations</a></li>
+  <li><a href="#summary-operations" id="toc-summary-operations" class="nav-link" data-scroll-target="#summary-operations"><span class="header-section-number">1.3.5</span> Summary operations</a></li>
+  </ul></li>
+  <li><a href="#comparing-tidier-with-dataframesmeta" id="toc-comparing-tidier-with-dataframesmeta" class="nav-link" data-scroll-target="#comparing-tidier-with-dataframesmeta"><span class="header-section-number">1.4</span> Comparing Tidier with DataFramesMeta</a></li>
+  <li><a href="#chaining-operations" id="toc-chaining-operations" class="nav-link" data-scroll-target="#chaining-operations"><span class="header-section-number">1.5</span> Chaining operations</a></li>
+  <li><a href="#using-variables-as-column-names" id="toc-using-variables-as-column-names" class="nav-link" data-scroll-target="#using-variables-as-column-names"><span class="header-section-number">1.6</span> Using variables as column names</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./dataframes-whatis.html">Part 2: Dataframes</a></li><li class="breadcrumb-item"><a href="./dataframes-whatis.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is a dataframe?</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is a dataframe?</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>A <code>dataframe</code> is a table (or a matrix) with some special restrictions that make it suited for data analysis. You can think of a dataframe as an array of vectors put side-by-side, all of which have the same length. Each column has a name.</p>
+<p>When a dataframe is <code>tidy</code>, each row is an observation and each column is a variable. See <span class="citation" data-cites="Wickham2023">(<a href="references.html#ref-Wickham2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, and Grolemund 2023, chap. 5</a>)</span> for a detailed discussion on tidy data and its advantages.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://r4ds.hadley.nz/images/tidy-1.png" class="img-fluid figure-img"></p>
+<figcaption>A tidy dataset. Figure from <span class="citation" data-cites="Wickham2023">(<a href="references.html#ref-Wickham2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, and Grolemund 2023</a>)</span>.</figcaption>
+</figure>
+</div>
+<p>We will always try to “tidy” a dataframe in order to use it.</p>
+<p>Let’s load the classic iris dataset to get into details.</p>
+<div id="8bf5a14c" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span>, <span class="bu">RDatasets</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>iris <span class="op">=</span> <span class="fu">dataset</span>(<span class="st">"datasets"</span>, <span class="st">"iris"</span>);</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="basic-manipulation-of-dataframes" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="basic-manipulation-of-dataframes"><span class="header-section-number">1.1</span> Basic manipulation of dataframes</h2>
+<p>You can print the dataframe by running the following:</p>
+<div id="edc82920" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>iris</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div><div style="float: left;"><span>150×5 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">125 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">SepalLength</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">SepalWidth</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">PetalLength</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">PetalWidth</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Species</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="CategoricalArrays.CategoricalValue{String, UInt8}">Cat…</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">3.5</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">4.9</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">4.7</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">1.3</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: right;">4.6</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">3.6</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">3.9</td>
+<td style="text-align: right;">1.7</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">7</td>
+<td style="text-align: right;">4.6</td>
+<td style="text-align: right;">3.4</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">8</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">3.4</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">9</td>
+<td style="text-align: right;">4.4</td>
+<td style="text-align: right;">2.9</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">10</td>
+<td style="text-align: right;">4.9</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">11</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">3.7</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">12</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">3.4</td>
+<td style="text-align: right;">1.6</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">13</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">139</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">1.8</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">140</td>
+<td style="text-align: right;">6.9</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">2.1</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">141</td>
+<td style="text-align: right;">6.7</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">5.6</td>
+<td style="text-align: right;">2.4</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">142</td>
+<td style="text-align: right;">6.9</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">143</td>
+<td style="text-align: right;">5.8</td>
+<td style="text-align: right;">2.7</td>
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">1.9</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">144</td>
+<td style="text-align: right;">6.8</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">5.9</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">145</td>
+<td style="text-align: right;">6.7</td>
+<td style="text-align: right;">3.3</td>
+<td style="text-align: right;">5.7</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">146</td>
+<td style="text-align: right;">6.7</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">5.2</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">147</td>
+<td style="text-align: right;">6.3</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">1.9</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">148</td>
+<td style="text-align: right;">6.5</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">5.2</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">149</td>
+<td style="text-align: right;">6.2</td>
+<td style="text-align: right;">3.4</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">150</td>
+<td style="text-align: right;">5.9</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">1.8</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>For each flower (row) there are 4 measurements (length and width of sepal and petal), along with the corresponding species. This dataframe is <em>tidy</em> because each row is an observation (a flower) and each column is a measurement of the same flower. This is the best scenario for a dataset, and you won’t always be so lucky.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>You can see a lot of useful information in the print above:</p>
+<ul>
+<li>There are 150 rows and 5 columns (the “150x5” part).</li>
+<li>The name and type of each column. <code>Species</code> is a fancy “150-element CategoricalArrays.CategoricalArray{String,1,UInt8}”.</li>
+<li>A counting of rows on the left.</li>
+</ul>
+<section id="columns" class="level3" data-number="1.1.1">
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="columns"><span class="header-section-number">1.1.1</span> Columns</h3>
+<p>There are several ways to “extract” a column in the form of a vector; all the below result in the same:</p>
+<div id="705aed93" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>iris.PetalLength;</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>iris[!, <span class="fl">1</span>];</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>iris[!, <span class="st">"PetalLength"</span>];</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>iris[!, <span class="op">:</span>PetalLength]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>150-element Vector{Float64}:
+ 1.4
+ 1.4
+ 1.3
+ 1.5
+ 1.4
+ 1.7
+ 1.4
+ 1.5
+ 1.4
+ 1.5
+ 1.5
+ 1.6
+ 1.4
+ ⋮
+ 4.8
+ 5.4
+ 5.6
+ 5.1
+ 5.1
+ 5.9
+ 5.7
+ 5.2
+ 5.0
+ 5.2
+ 5.4
+ 5.1</code></pre>
+</div>
+</div>
+<p><strong>Important:</strong> these are <em>views</em> of the dataframe. If you modify a view, you also modify the dataframe. A view is just a shortcut to the dataframe.</p>
+<p>To get a copy of the column, use</p>
+<div id="ee428187" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>iris[<span class="op">:</span>, <span class="fl">1</span>];</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>iris[<span class="op">:</span>, <span class="st">"PetalLength"</span>];</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>iris[<span class="op">:</span>, <span class="op">:</span>PetalLength]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>150-element Vector{Float64}:
+ 1.4
+ 1.4
+ 1.3
+ 1.5
+ 1.4
+ 1.7
+ 1.4
+ 1.5
+ 1.4
+ 1.5
+ 1.5
+ 1.6
+ 1.4
+ ⋮
+ 4.8
+ 5.4
+ 5.6
+ 5.1
+ 5.1
+ 5.9
+ 5.7
+ 5.2
+ 5.0
+ 5.2
+ 5.4
+ 5.1</code></pre>
+</div>
+</div>
+<p>Views are faster to access than copies, so it depends on the use you are going to make. See <a href="https://dataframes.juliadata.org/stable/man/getting_started/#The-DataFrame-Type">the Dataframes.jl docs</a> for more details.</p>
+<p>If the column name is inside a variable, say <code>my_column</code>, then you can use the following:</p>
+<div id="073afb20" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># in case it is a string</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>my_column <span class="op">=</span> <span class="st">"PetalLength"</span>;</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>iris[<span class="op">:</span>, my_column];</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># in case it is a symbol</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>my_column2 <span class="op">=</span> <span class="op">:</span>PetalLength;</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>iris[<span class="op">:</span>, my_column2]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>150-element Vector{Float64}:
+ 1.4
+ 1.4
+ 1.3
+ 1.5
+ 1.4
+ 1.7
+ 1.4
+ 1.5
+ 1.4
+ 1.5
+ 1.5
+ 1.6
+ 1.4
+ ⋮
+ 4.8
+ 5.4
+ 5.6
+ 5.1
+ 5.1
+ 5.9
+ 5.7
+ 5.2
+ 5.0
+ 5.2
+ 5.4
+ 5.1</code></pre>
+</div>
+</div>
+<p>Symbols are a little faster to access compared to string, but special strings can’t be turned into symbols.</p>
+<p>As an example of the “copy vs.&nbsp;view” behaviour, let’s modify the first row and set the <code>SepalLength</code> to 999. The copy approach won’t work:</p>
+<div id="0e7cdd91" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>iris[<span class="op">:</span>, <span class="st">"PetalLength"</span>][<span class="fl">1</span>] <span class="op">=</span> <span class="fl">999</span>;</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>iris</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div><div style="float: left;"><span>150×5 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">125 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">SepalLength</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">SepalWidth</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">PetalLength</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">PetalWidth</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Species</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="CategoricalArrays.CategoricalValue{String, UInt8}">Cat…</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">3.5</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">4.9</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">4.7</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">1.3</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: right;">4.6</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">3.6</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">3.9</td>
+<td style="text-align: right;">1.7</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">7</td>
+<td style="text-align: right;">4.6</td>
+<td style="text-align: right;">3.4</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">8</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">3.4</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">9</td>
+<td style="text-align: right;">4.4</td>
+<td style="text-align: right;">2.9</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">10</td>
+<td style="text-align: right;">4.9</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">11</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">3.7</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">12</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">3.4</td>
+<td style="text-align: right;">1.6</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">13</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">139</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">1.8</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">140</td>
+<td style="text-align: right;">6.9</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">2.1</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">141</td>
+<td style="text-align: right;">6.7</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">5.6</td>
+<td style="text-align: right;">2.4</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">142</td>
+<td style="text-align: right;">6.9</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">143</td>
+<td style="text-align: right;">5.8</td>
+<td style="text-align: right;">2.7</td>
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">1.9</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">144</td>
+<td style="text-align: right;">6.8</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">5.9</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">145</td>
+<td style="text-align: right;">6.7</td>
+<td style="text-align: right;">3.3</td>
+<td style="text-align: right;">5.7</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">146</td>
+<td style="text-align: right;">6.7</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">5.2</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">147</td>
+<td style="text-align: right;">6.3</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">1.9</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">148</td>
+<td style="text-align: right;">6.5</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">5.2</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">149</td>
+<td style="text-align: right;">6.2</td>
+<td style="text-align: right;">3.4</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">150</td>
+<td style="text-align: right;">5.9</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">1.8</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>but with view, it works as expected:</p>
+<div id="277b033c" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>iris.SepalLength[<span class="fl">1</span>] <span class="op">=</span> <span class="fl">999</span>;</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>iris</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div><div style="float: left;"><span>150×5 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">125 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">SepalLength</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">SepalWidth</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">PetalLength</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">PetalWidth</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Species</th>
+</tr>
+<tr class="subheader headerLastRow even">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="CategoricalArrays.CategoricalValue{String, UInt8}">Cat…</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">999.0</td>
+<td style="text-align: right;">3.5</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">4.9</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">4.7</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">1.3</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: right;">4.6</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">3.6</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">3.9</td>
+<td style="text-align: right;">1.7</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">7</td>
+<td style="text-align: right;">4.6</td>
+<td style="text-align: right;">3.4</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">8</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">3.4</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">9</td>
+<td style="text-align: right;">4.4</td>
+<td style="text-align: right;">2.9</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">10</td>
+<td style="text-align: right;">4.9</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">11</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">3.7</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">12</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">3.4</td>
+<td style="text-align: right;">1.6</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">13</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+<td style="text-align: right;">⋮</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">139</td>
+<td style="text-align: right;">6.0</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">1.8</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">140</td>
+<td style="text-align: right;">6.9</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">2.1</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">141</td>
+<td style="text-align: right;">6.7</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">5.6</td>
+<td style="text-align: right;">2.4</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">142</td>
+<td style="text-align: right;">6.9</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">143</td>
+<td style="text-align: right;">5.8</td>
+<td style="text-align: right;">2.7</td>
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">1.9</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">144</td>
+<td style="text-align: right;">6.8</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">5.9</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">145</td>
+<td style="text-align: right;">6.7</td>
+<td style="text-align: right;">3.3</td>
+<td style="text-align: right;">5.7</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">146</td>
+<td style="text-align: right;">6.7</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">5.2</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">147</td>
+<td style="text-align: right;">6.3</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">1.9</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">148</td>
+<td style="text-align: right;">6.5</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">5.2</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">149</td>
+<td style="text-align: right;">6.2</td>
+<td style="text-align: right;">3.4</td>
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">2.3</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">150</td>
+<td style="text-align: right;">5.9</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">1.8</td>
+<td style="text-align: left;">virginica</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="libraries" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="libraries"><span class="header-section-number">1.2</span> Libraries</h2>
+<section id="dataframes" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="dataframes"><span class="header-section-number">1.2.1</span> Dataframes</h3>
+<p><a href="https://dataframes.juliadata.org/stable/">Dataframes</a> is the main package for dealing with dataframes in Julia. It defines the <code>DataFrame</code> type and all the important operations. It is fast and flexible enough for most cases. In order to manipulate dataframes in a more “easier” fashion, we also have 2 main alternatives: <code>DataFramesMeta</code> and <code>TidierData</code>.</p>
+</section>
+<section id="dataframesmeta" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="dataframesmeta"><span class="header-section-number">1.2.2</span> DataFramesMeta</h3>
+<p><a href="https://juliadata.org/DataFramesMeta.jl/stable/">DataFramesMeta</a> is a collection of macros based on DataFrames. It provides many syntatic helpers to slice rows, create columns and summarise data.</p>
+</section>
+<section id="tidierdata" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="tidierdata"><span class="header-section-number">1.2.3</span> TidierData</h3>
+<p><a href="https://tidierorg.github.io/Tidier.jl/dev/">Tidier</a> is collections of libraries inspired by the <a href="https://www.tidyverse.org/">tidyverse</a> ecosystem in R. <a href="https://tidierorg.github.io/TidierData.jl/latest/">TidierData</a> is the main package (analogous to R’s <code>dplyr</code>). It uses macros to rewrite your code into DataFrames.jl code. Because of this “tidy” heritance, we will often talk about the R packages that inspired the Julia ones (like <code>dplyr</code>, <code>tidyr</code>, <code>purrr</code> and many others).</p>
+<p>In this book, whenever possible, we will show the different approaches in a tabset so you can compare them, giving more emphasis on Tidier.</p>
+</section>
+</section>
+<section id="operations" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="operations"><span class="header-section-number">1.3</span> Operations</h2>
+<p>Let’s start with some unary operations, ie. operations that take only one dataframe as input and return one dataframe as output.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. We can divide these operations in some categories:</p>
+<section id="row-operations" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="row-operations"><span class="header-section-number">1.3.1</span> Row operations</h3>
+<p>These are operations that only affect rows, leaving all columns untouched.</p>
+<ul>
+<li><p><em>Filtering</em> or <em>subsetting</em> is when we select a subset of rows based on some criteria. Example: all male penguins of species Adelie. The output is a dataframe with the exact same columns, but possibly fewer rows.</p></li>
+<li><p><em>Arranging</em> or <em>ordering</em> is when we reorder the rows of a dataframe using some criteria.</p></li>
+</ul>
+</section>
+<section id="column-operations" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="column-operations"><span class="header-section-number">1.3.2</span> Column operations</h3>
+<p>These are operations that only affect columns, leaving all rows untouched.</p>
+<ul>
+<li><p><em>Selecting</em> is when we select some columns of a dataframe, while keeping all the rows. Example: select the <code>species</code> and <code>sex</code> columns.</p></li>
+<li><p><em>Mutating</em> or <em>transforming</em> is when we create new columns. Example: a new column <code>body_mass_kg</code> can be obtained dividing the column <code>body_mass_g</code> by 1000 for each entry.</p></li>
+</ul>
+</section>
+<section id="reshaping-operations" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="reshaping-operations"><span class="header-section-number">1.3.3</span> Reshaping operations</h3>
+<p>These operations change the shape of a dataframe, making it wider or longer.</p>
+<ul>
+<li><p><code>Widening</code></p></li>
+<li><p><code>Longering</code>?</p></li>
+</ul>
+</section>
+<section id="grouping-operations" class="level3" data-number="1.3.4">
+<h3 data-number="1.3.4" class="anchored" data-anchor-id="grouping-operations"><span class="header-section-number">1.3.4</span> Grouping operations</h3>
+<ul>
+<li><em>Grouping</em> is when we split the dataframe into a collection (array) of dataframes using some criteria. Example: grouping by <code>Species</code> gives us 3 dataframes, each with only one species.</li>
+</ul>
+</section>
+<section id="summary-operations" class="level3" data-number="1.3.5">
+<h3 data-number="1.3.5" class="anchored" data-anchor-id="summary-operations"><span class="header-section-number">1.3.5</span> Summary operations</h3>
+<p>These operations can possibly change rows and columns at the same time.</p>
+<ul>
+<li>Distinct;</li>
+<li>Counting;</li>
+<li><em>Summarising</em> or <em>combining</em> is when we apply some function to some columns in order to reduce the amount of rows with some kind of summary (like a mean, median, max, and so on). Example: for each <code>species</code>, apply the <code>mean</code> function to the columns <code>body_mass_g</code>. This will yield a dataframe with 3 rows, one for each species. Summarising is usually done after a grouping, so the summary is calculated with relation to each of the groups.</li>
+</ul>
+<p>??? deixar grupo e sumário juntos?</p>
+<p>Since all these functions return a dataframe (or an array of dataframes, in the case of grouping), we can chain these operations together, with the convention that on grouped dataframes we apply the function in each one of the groups.</p>
+<p>Now for binary operations (ie. operations that take two dataframes), we have all the joins:</p>
+<ul>
+<li>Left join;</li>
+<li>Right join;</li>
+<li>Inner join;</li>
+<li>Outer join;</li>
+<li>Full join.</li>
+</ul>
+</section>
+</section>
+<section id="comparing-tidier-with-dataframesmeta" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="comparing-tidier-with-dataframesmeta"><span class="header-section-number">1.4</span> Comparing Tidier with DataFramesMeta</h2>
+<p>The following table list the operations on each package:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 19%">
+<col style="width: 42%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>dplyr</th>
+<th>Tidier</th>
+<th>DataFramesMeta</th>
+<th>DataFrames</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>filter</code></td>
+<td><code>@filter</code></td>
+<td><code>@subset</code> / <code>@rsubset</code></td>
+<td><code>subset</code></td>
+</tr>
+<tr class="even">
+<td><code>arrange</code></td>
+<td><code>@arrange</code></td>
+<td><code>@orderby</code> / <code>@rorderby</code></td>
+<td><code>sort!</code></td>
+</tr>
+<tr class="odd">
+<td><code>select</code></td>
+<td><code>@select</code></td>
+<td><code>@select</code></td>
+<td>array sintax</td>
+</tr>
+<tr class="even">
+<td><code>mutate</code></td>
+<td><code>@mutate</code></td>
+<td><code>@transform</code> / <code>@rtransform</code></td>
+<td>array sintax</td>
+</tr>
+<tr class="odd">
+<td><code>group_by</code></td>
+<td><code>@group_by</code></td>
+<td><code>@groupby</code></td>
+<td><code>groupby</code></td>
+</tr>
+<tr class="even">
+<td><code>summarise</code></td>
+<td><code>@summarise</code></td>
+<td><code>@combine</code></td>
+<td><code>combine</code></td>
+</tr>
+</tbody>
+</table>
+<p>It is clear that for those coming from <code>R</code>, Tidier will look like the most natural approach.</p>
+<p>Notice that we have a name clash with <code>@select</code>: that is why we usually write <code>import DataFramesMeta as DFM</code> at the beginning.</p>
+<p>We will see each operation with more details in the following chapters.</p>
+</section>
+<section id="chaining-operations" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="chaining-operations"><span class="header-section-number">1.5</span> Chaining operations</h2>
+<p>We can chain (or pipe) dataframe operations with the <code>@chain</code> macro:</p>
+<div id="385e3c9f" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">TidierData</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@chain</span> iris <span class="cf">begin</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@filter</span> !<span class="fu">ismissing</span>(Species)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@group_by</span> Species</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@summarise</span> mean <span class="op">=</span> <span class="fu">mean</span>(SepalLength)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@arrange</span> mean</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Each row uses the results of the previous row as the input for the first argument of the current function. We will see more details later.</p>
+</section>
+<section id="using-variables-as-column-names" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="using-variables-as-column-names"><span class="header-section-number">1.6</span> Using variables as column names</h2>
+<p>In Tidier, using the column names as if they were variables in the environment leads to some complication when we want to use other variables that are not column names.</p>
+<p>For example, suppose you want to arrange penguins by a column that is stored in a variable.</p>
+<p>When this happens, we add <code>@eval</code> before the Tidier code and add a <code>$</code> to force evaluation of the variable, as in the following example:</p>
+<div id="94e9d02e" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>my_arrange_column <span class="op">=</span> <span class="op">:</span>body_mass_g;</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@eval</span> <span class="pp">@arrange</span> penguins <span class="op">$</span>my_arrange_column</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Wickham2023" class="csl-entry" role="listitem">
+Wickham, Hadley, Mine Çetinkaya-Rundel, and Garrett Grolemund. 2023. <em><span class="nocase">R for data science: Import, tidy, transform, visualize, and model data</span></em>. Second. O’Reilly. <a href="https://r4ds.hadley.nz/">https://r4ds.hadley.nz/</a>.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>They say that 80% of a data scientist job is cleaning data. This is an optimistic view when you have to analyze some nebulous artisanal Excel file.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Join operations will be dealt later.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="Preface">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./dataframes-rows.html" class="pagination-link" aria-label="Operations on rows">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Operations on rows</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>This book is part of the <a href="https://github.com/TidierOrg/Tidier.jl">Tidier organization</a>, bringing joy to data science in Julia.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

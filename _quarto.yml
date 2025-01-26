@@ -10,7 +10,7 @@ execute:
   message: false
   cache: true
 
-jupyter: julia-1.10
+jupyter: julia-1.11
 
 book:
   title: "Tidier Data Science with Julia"
@@ -32,8 +32,9 @@ book:
     - part: "Part 1: Julia basics"
       # chapters: 
       # - dataframes.qmd
-    - part: dataframes.qmd
+    - part: "Part 2: Dataframes"
       chapters: 
+      - dataframes-whatis.qmd
       - dataframes-rows.qmd
       - dataframes-columns.qmd
       # - dataframes-groups.qmd

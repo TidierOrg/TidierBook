@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.25">
+<meta name="generator" content="quarto-1.7.13">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1&nbsp; Operations on rows – Tidier Data Science with Julia</title>
+<title>2&nbsp; Operations on rows – Tidier Data Science with Julia</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -65,16 +65,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./dataframes-columns.html" rel="next">
-<link href="./dataframes.html" rel="prev">
-<script src="site_libs/quarto-html/quarto.js"></script>
+<link href="./dataframes-whatis.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-018089954d508eae8a473f0b7f0491f0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-66ab7fd5e73b7f0a764e0d49b3e29ab1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5341e04cf592f47685c7d2c736cc69d2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-66433ebe633adaf0b06ce5767fdf2f08.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -118,7 +119,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./dataframes.html">Part 2: Dataframes</a></li><li class="breadcrumb-item"><a href="./dataframes-rows.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Operations on rows</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./dataframes-whatis.html">Part 2: Dataframes</a></li><li class="breadcrumb-item"><a href="./dataframes-rows.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Operations on rows</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -163,7 +164,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./dataframes.html" class="sidebar-item-text sidebar-link">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Part 2: Dataframes</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -172,14 +173,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./dataframes-whatis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is a dataframe?</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./dataframes-rows.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Operations on rows</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Operations on rows</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./dataframes-columns.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Operations on columns</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Operations on columns</span></span></a>
   </div>
 </li>
       </ul>
@@ -219,18 +226,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#filtering-or-throwing-rows-away" id="toc-filtering-or-throwing-rows-away" class="nav-link active" data-scroll-target="#filtering-or-throwing-rows-away"><span class="header-section-number">1.1</span> Filtering (or: throwing rows away)</a>
+  <li><a href="#filtering-or-throwing-rows-away" id="toc-filtering-or-throwing-rows-away" class="nav-link active" data-scroll-target="#filtering-or-throwing-rows-away"><span class="header-section-number">2.1</span> Filtering (or: throwing rows away)</a>
   <ul class="collapse">
-  <li><a href="#filtering-with-one-criteria" id="toc-filtering-with-one-criteria" class="nav-link" data-scroll-target="#filtering-with-one-criteria"><span class="header-section-number">1.1.1</span> Filtering with one criteria</a></li>
-  <li><a href="#filtering-with-several-criteria" id="toc-filtering-with-several-criteria" class="nav-link" data-scroll-target="#filtering-with-several-criteria"><span class="header-section-number">1.1.2</span> Filtering with several criteria</a></li>
-  <li><a href="#filtering-with-metadata" id="toc-filtering-with-metadata" class="nav-link" data-scroll-target="#filtering-with-metadata"><span class="header-section-number">1.1.3</span> Filtering with metadata</a></li>
-  <li><a href="#filtering-with-a-variable-column-name" id="toc-filtering-with-a-variable-column-name" class="nav-link" data-scroll-target="#filtering-with-a-variable-column-name"><span class="header-section-number">1.1.4</span> Filtering with a variable column name</a></li>
+  <li><a href="#filtering-with-one-criteria" id="toc-filtering-with-one-criteria" class="nav-link" data-scroll-target="#filtering-with-one-criteria"><span class="header-section-number">2.1.1</span> Filtering with one criteria</a></li>
+  <li><a href="#filtering-with-several-criteria" id="toc-filtering-with-several-criteria" class="nav-link" data-scroll-target="#filtering-with-several-criteria"><span class="header-section-number">2.1.2</span> Filtering with several criteria</a></li>
+  <li><a href="#filtering-with-metadata" id="toc-filtering-with-metadata" class="nav-link" data-scroll-target="#filtering-with-metadata"><span class="header-section-number">2.1.3</span> Filtering with metadata</a></li>
+  <li><a href="#filtering-with-a-variable-column-name" id="toc-filtering-with-a-variable-column-name" class="nav-link" data-scroll-target="#filtering-with-a-variable-column-name"><span class="header-section-number">2.1.4</span> Filtering with a variable column name</a></li>
   </ul></li>
-  <li><a href="#arranging" id="toc-arranging" class="nav-link" data-scroll-target="#arranging"><span class="header-section-number">1.2</span> Arranging</a>
+  <li><a href="#arranging" id="toc-arranging" class="nav-link" data-scroll-target="#arranging"><span class="header-section-number">2.2</span> Arranging</a>
   <ul class="collapse">
-  <li><a href="#arranging-by-one-column" id="toc-arranging-by-one-column" class="nav-link" data-scroll-target="#arranging-by-one-column"><span class="header-section-number">1.2.1</span> Arranging by one column</a></li>
-  <li><a href="#arranging-by-two-columns-with-one-reversed" id="toc-arranging-by-two-columns-with-one-reversed" class="nav-link" data-scroll-target="#arranging-by-two-columns-with-one-reversed"><span class="header-section-number">1.2.2</span> Arranging by two columns, with one reversed</a></li>
-  <li><a href="#arranging-by-one-variable-column" id="toc-arranging-by-one-variable-column" class="nav-link" data-scroll-target="#arranging-by-one-variable-column"><span class="header-section-number">1.2.3</span> Arranging by one variable column</a></li>
+  <li><a href="#arranging-by-one-column" id="toc-arranging-by-one-column" class="nav-link" data-scroll-target="#arranging-by-one-column"><span class="header-section-number">2.2.1</span> Arranging by one column</a></li>
+  <li><a href="#arranging-by-two-columns-with-one-reversed" id="toc-arranging-by-two-columns-with-one-reversed" class="nav-link" data-scroll-target="#arranging-by-two-columns-with-one-reversed"><span class="header-section-number">2.2.2</span> Arranging by two columns, with one reversed</a></li>
+  <li><a href="#arranging-by-one-variable-column" id="toc-arranging-by-one-variable-column" class="nav-link" data-scroll-target="#arranging-by-one-variable-column"><span class="header-section-number">2.2.3</span> Arranging by one variable column</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -238,9 +245,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./dataframes.html">Part 2: Dataframes</a></li><li class="breadcrumb-item"><a href="./dataframes-rows.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Operations on rows</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./dataframes-whatis.html">Part 2: Dataframes</a></li><li class="breadcrumb-item"><a href="./dataframes-rows.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Operations on rows</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Operations on rows</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Operations on rows</span></h1>
 </div>
 
 
@@ -397,8 +404,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<section id="filtering-or-throwing-rows-away" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="filtering-or-throwing-rows-away"><span class="header-section-number">1.1</span> Filtering (or: throwing rows away)</h2>
+<section id="filtering-or-throwing-rows-away" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="filtering-or-throwing-rows-away"><span class="header-section-number">2.1</span> Filtering (or: throwing rows away)</h2>
 <p>To <em>filter</em> a dataframe means keeping only the rows that satisfy a certain criteria (ie. a boolean condition).</p>
 <p>To filter in Tidier, we use the macro <code>@filter</code>. You can use it in the form</p>
 <div id="4" class="cell" data-execution_count="1">
@@ -1584,8 +1591,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(penguins, <span class="op">:</span>column <span class="op">=&gt;</span> boolean_function)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>where <code>boolean_function</code> is a boolean (with possibly <code>missing</code> values) function on 1 variable (the <code>:column</code> you passed). Add the kwarg <code>skipmissing=true</code> if you want to get rid of missing values.</p>
-<section id="filtering-with-one-criteria" class="level3" data-number="1.1.1">
-<h3 data-number="1.1.1" class="anchored" data-anchor-id="filtering-with-one-criteria"><span class="header-section-number">1.1.1</span> Filtering with one criteria</h3>
+<section id="filtering-with-one-criteria" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="filtering-with-one-criteria"><span class="header-section-number">2.1.1</span> Filtering with one criteria</h3>
 <p><strong>Problem:</strong> Filtering all the rows with <code>species</code> == “Adelie”.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Tidier</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">DataFramesMeta</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">DataFrames</a></li></ul>
@@ -2478,8 +2485,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="filtering-with-several-criteria" class="level3" data-number="1.1.2">
-<h3 data-number="1.1.2" class="anchored" data-anchor-id="filtering-with-several-criteria"><span class="header-section-number">1.1.2</span> Filtering with several criteria</h3>
+<section id="filtering-with-several-criteria" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="filtering-with-several-criteria"><span class="header-section-number">2.1.2</span> Filtering with several criteria</h3>
 <p><strong>Problem:</strong> Filtering all the rows with <code>species</code> == “Adelie”, <code>sex</code> == “male” and <code>body_mass_g</code> &gt; 4000.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Tidier</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">DataFramesMeta</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">DataFrames</a></li></ul>
@@ -4268,8 +4275,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="filtering-with-metadata" class="level3" data-number="1.1.3">
-<h3 data-number="1.1.3" class="anchored" data-anchor-id="filtering-with-metadata"><span class="header-section-number">1.1.3</span> Filtering with metadata</h3>
+<section id="filtering-with-metadata" class="level3" data-number="2.1.3">
+<h3 data-number="2.1.3" class="anchored" data-anchor-id="filtering-with-metadata"><span class="header-section-number">2.1.3</span> Filtering with metadata</h3>
 <p>By metadata here we mean data that is inside the dataframe, as the mean/max/min of a column.</p>
 <p><strong>Problem:</strong> Filtering all the rows where the <code>flipper_length_mm</code> is greater than the mean.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
@@ -5163,8 +5170,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="filtering-with-a-variable-column-name" class="level3" data-number="1.1.4">
-<h3 data-number="1.1.4" class="anchored" data-anchor-id="filtering-with-a-variable-column-name"><span class="header-section-number">1.1.4</span> Filtering with a variable column name</h3>
+<section id="filtering-with-a-variable-column-name" class="level3" data-number="2.1.4">
+<h3 data-number="2.1.4" class="anchored" data-anchor-id="filtering-with-a-variable-column-name"><span class="header-section-number">2.1.4</span> Filtering with a variable column name</h3>
 <p>Suppose the column you want to filter is a variable, let’s say a symbol</p>
 <div id="38" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>my_column <span class="op">=</span> <span class="op">:</span>species;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -6957,11 +6964,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="arranging" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="arranging"><span class="header-section-number">1.2</span> Arranging</h2>
+<section id="arranging" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="arranging"><span class="header-section-number">2.2</span> Arranging</h2>
 <p>To <em>arrange</em> a dataframe means to reorder the rows according to the order of some columns. The rows are first arranged by the first column, then by the second (if any), and so on. In Tidier, when we want to invert the ordering, just put the column name inside a <code>desc()</code> call.</p>
-<section id="arranging-by-one-column" class="level3" data-number="1.2.1">
-<h3 data-number="1.2.1" class="anchored" data-anchor-id="arranging-by-one-column"><span class="header-section-number">1.2.1</span> Arranging by one column</h3>
+<section id="arranging-by-one-column" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="arranging-by-one-column"><span class="header-section-number">2.2.1</span> Arranging by one column</h3>
 <p><strong>Problem:</strong> Arrange by <code>body_mass_g</code>.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">Tidier</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">DataFramesMeta</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-3" role="tab" aria-controls="tabset-7-3" aria-selected="false">DataFrames</a></li></ul>
@@ -7854,8 +7861,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="arranging-by-two-columns-with-one-reversed" class="level3" data-number="1.2.2">
-<h3 data-number="1.2.2" class="anchored" data-anchor-id="arranging-by-two-columns-with-one-reversed"><span class="header-section-number">1.2.2</span> Arranging by two columns, with one reversed</h3>
+<section id="arranging-by-two-columns-with-one-reversed" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="arranging-by-two-columns-with-one-reversed"><span class="header-section-number">2.2.2</span> Arranging by two columns, with one reversed</h3>
 <p><strong>Problem:</strong> First arrange by <code>island</code>, then by reversed <code>body_mass_g</code>.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">Tidier</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false">DataFramesMeta</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-3" role="tab" aria-controls="tabset-8-3" aria-selected="false">DataFrames</a></li></ul>
@@ -8750,8 +8757,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="arranging-by-one-variable-column" class="level3" data-number="1.2.3">
-<h3 data-number="1.2.3" class="anchored" data-anchor-id="arranging-by-one-variable-column"><span class="header-section-number">1.2.3</span> Arranging by one variable column</h3>
+<section id="arranging-by-one-variable-column" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="arranging-by-one-variable-column"><span class="header-section-number">2.2.3</span> Arranging by one variable column</h3>
 <p><strong>Problem:</strong> Arrange by a column stored in a variable <code>my_arrange_column</code>.</p>
 <div id="66" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>my_arrange_column <span class="op">=</span> <span class="op">:</span>body_mass_g;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -9734,8 +9741,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -9846,7 +9851,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -10074,13 +10078,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./dataframes.html" class="pagination-link" aria-label="Part 2: Dataframes">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Part 2: Dataframes</span>
+      <a href="./dataframes-whatis.html" class="pagination-link" aria-label="What is a dataframe?">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">What is a dataframe?</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./dataframes-columns.html" class="pagination-link" aria-label="Operations on columns">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Operations on columns</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Operations on columns</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.25">
+<meta name="generator" content="quarto-1.7.13">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -54,10 +54,30 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -66,15 +86,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <link href="./dataframes-rows.html" rel="next">
 <link href="./index.html" rel="prev">
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-018089954d508eae8a473f0b7f0491f0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-66ab7fd5e73b7f0a764e0d49b3e29ab1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5341e04cf592f47685c7d2c736cc69d2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-66433ebe633adaf0b06ce5767fdf2f08.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -102,9 +123,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -223,15 +241,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#dataframes" id="toc-dataframes" class="nav-link" data-scroll-target="#dataframes">Dataframes</a></li>
   <li><a href="#dataframesmeta" id="toc-dataframesmeta" class="nav-link" data-scroll-target="#dataframesmeta">DataFramesMeta</a></li>
-  <li><a href="#tidier" id="toc-tidier" class="nav-link" data-scroll-target="#tidier">Tidier</a></li>
+  <li><a href="#tidierdata" id="toc-tidierdata" class="nav-link" data-scroll-target="#tidierdata">TidierData</a></li>
   </ul></li>
   <li><a href="#operations" id="toc-operations" class="nav-link" data-scroll-target="#operations">Operations</a>
   <ul class="collapse">
-  <li><a href="#rows-operations" id="toc-rows-operations" class="nav-link" data-scroll-target="#rows-operations">Rows operations</a></li>
+  <li><a href="#row-operations" id="toc-row-operations" class="nav-link" data-scroll-target="#row-operations">Row operations</a></li>
   <li><a href="#column-operations" id="toc-column-operations" class="nav-link" data-scroll-target="#column-operations">Column operations</a></li>
   <li><a href="#reshaping-operations" id="toc-reshaping-operations" class="nav-link" data-scroll-target="#reshaping-operations">Reshaping operations</a></li>
   <li><a href="#grouping-operations" id="toc-grouping-operations" class="nav-link" data-scroll-target="#grouping-operations">Grouping operations</a></li>
-  <li><a href="#mixed-operations" id="toc-mixed-operations" class="nav-link" data-scroll-target="#mixed-operations">Mixed operations</a></li>
+  <li><a href="#summary-operations" id="toc-summary-operations" class="nav-link" data-scroll-target="#summary-operations">Summary operations</a></li>
   </ul></li>
   <li><a href="#comparing-tidier-with-dataframesmeta" id="toc-comparing-tidier-with-dataframesmeta" class="nav-link" data-scroll-target="#comparing-tidier-with-dataframesmeta">Comparing Tidier with DataFramesMeta</a></li>
   <li><a href="#chaining-operations" id="toc-chaining-operations" class="nav-link" data-scroll-target="#chaining-operations">Chaining operations</a></li>
@@ -262,339 +280,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Dataframes are one of the most important objects in data science.</p>
-<p>A dataframe is a table where each row is an observation and each column is a variable.</p>
-<div class="callout callout-style-simple callout-none no-icon">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<p>A <code>dataframe</code> is a table (or a matrix) with some special details that make it suited for data analysis.</p>
+<p>When a dataframe is <code>tidy</code>, each row is an observation and each column is a variable. See <span class="citation" data-cites="Wickham2023">(<a href="references.html#ref-Wickham2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, and Grolemund 2023, chap. 5</a>)</span> for a detailed discussion on tidy data and its advantages.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://r4ds.hadley.nz/images/tidy-1.png" class="img-fluid figure-img"></p>
+<figcaption>A tidy dataset. Figure from <span class="citation" data-cites="Wickham2023">(<a href="references.html#ref-Wickham2023" role="doc-biblioref">Wickham, Çetinkaya-Rundel, and Grolemund 2023</a>)</span>.</figcaption>
+</figure>
 </div>
-<div class="callout-body-container">
-<p>A dataframe <code>df</code> is a list of vectors, all with the same length.</p>
+<div id="def-dataframe" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1</strong></span> A dataframe <code>df</code> is an array of vectors, all with the same length.</p>
 <p>A column of <code>df</code> is just one if its vectors.</p>
 <p>The <code>i-th</code> row of <code>df</code> is the vector formed by the <code>i-th</code> coordinate of each of its columns.</p>
 </div>
-</div>
-</div>
-<p>We will use the Palmer Penguin dataset as a toy example for the remaining of the chapter.</p>
-<div id="2" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span>, <span class="bu">PalmerPenguins</span></span>
+<p>We will use the classic iris dataset as a toy example for the remaining of the chapter.</p>
+<div id="8b7fe6f1" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span>, <span class="bu">RDatasets</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Tidier</span>, <span class="bu">Chain</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">DataFramesMeta</span> as DFM</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> PalmerPenguins.<span class="fu">load</span>() <span class="op">|&gt;</span> DataFrame</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<div><div style="float: left;"><span>344×7 DataFrame</span></div><div style="float: right;"><span style="font-style: italic;">319 rows omitted</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
-<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">species</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">island</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">bill_length_mm</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">bill_depth_mm</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">flipper_length_mm</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
-</tr>
-<tr class="subheader headerLastRow even">
-<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="InlineStrings.String15">String15</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Float64}">Float64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, Int64}">Int64?</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th" title="Union{Missing, InlineStrings.String7}">String7?</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
-<td style="text-align: left;">Adelie</td>
-<td style="text-align: left;">Torgersen</td>
-<td style="text-align: right;">39.1</td>
-<td style="text-align: right;">18.7</td>
-<td style="text-align: right;">181</td>
-<td style="text-align: right;">3750</td>
-<td style="text-align: left;">male</td>
-</tr>
-<tr class="even">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
-<td style="text-align: left;">Adelie</td>
-<td style="text-align: left;">Torgersen</td>
-<td style="text-align: right;">39.5</td>
-<td style="text-align: right;">17.4</td>
-<td style="text-align: right;">186</td>
-<td style="text-align: right;">3800</td>
-<td style="text-align: left;">female</td>
-</tr>
-<tr class="odd">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
-<td style="text-align: left;">Adelie</td>
-<td style="text-align: left;">Torgersen</td>
-<td style="text-align: right;">40.3</td>
-<td style="text-align: right;">18.0</td>
-<td style="text-align: right;">195</td>
-<td style="text-align: right;">3250</td>
-<td style="text-align: left;">female</td>
-</tr>
-<tr class="even">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
-<td style="text-align: left;">Adelie</td>
-<td style="text-align: left;">Torgersen</td>
-<td style="text-align: right; font-style: italic;">missing</td>
-<td style="text-align: right; font-style: italic;">missing</td>
-<td style="text-align: right; font-style: italic;">missing</td>
-<td style="text-align: right; font-style: italic;">missing</td>
-<td style="text-align: left; font-style: italic;">missing</td>
-</tr>
-<tr class="odd">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
-<td style="text-align: left;">Adelie</td>
-<td style="text-align: left;">Torgersen</td>
-<td style="text-align: right;">36.7</td>
-<td style="text-align: right;">19.3</td>
-<td style="text-align: right;">193</td>
-<td style="text-align: right;">3450</td>
-<td style="text-align: left;">female</td>
-</tr>
-<tr class="even">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">6</td>
-<td style="text-align: left;">Adelie</td>
-<td style="text-align: left;">Torgersen</td>
-<td style="text-align: right;">39.3</td>
-<td style="text-align: right;">20.6</td>
-<td style="text-align: right;">190</td>
-<td style="text-align: right;">3650</td>
-<td style="text-align: left;">male</td>
-</tr>
-<tr class="odd">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">7</td>
-<td style="text-align: left;">Adelie</td>
-<td style="text-align: left;">Torgersen</td>
-<td style="text-align: right;">38.9</td>
-<td style="text-align: right;">17.8</td>
-<td style="text-align: right;">181</td>
-<td style="text-align: right;">3625</td>
-<td style="text-align: left;">female</td>
-</tr>
-<tr class="even">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">8</td>
-<td style="text-align: left;">Adelie</td>
-<td style="text-align: left;">Torgersen</td>
-<td style="text-align: right;">39.2</td>
-<td style="text-align: right;">19.6</td>
-<td style="text-align: right;">195</td>
-<td style="text-align: right;">4675</td>
-<td style="text-align: left;">male</td>
-</tr>
-<tr class="odd">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">9</td>
-<td style="text-align: left;">Adelie</td>
-<td style="text-align: left;">Torgersen</td>
-<td style="text-align: right;">34.1</td>
-<td style="text-align: right;">18.1</td>
-<td style="text-align: right;">193</td>
-<td style="text-align: right;">3475</td>
-<td style="text-align: left; font-style: italic;">missing</td>
-</tr>
-<tr class="even">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">10</td>
-<td style="text-align: left;">Adelie</td>
-<td style="text-align: left;">Torgersen</td>
-<td style="text-align: right;">42.0</td>
-<td style="text-align: right;">20.2</td>
-<td style="text-align: right;">190</td>
-<td style="text-align: right;">4250</td>
-<td style="text-align: left; font-style: italic;">missing</td>
-</tr>
-<tr class="odd">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">11</td>
-<td style="text-align: left;">Adelie</td>
-<td style="text-align: left;">Torgersen</td>
-<td style="text-align: right;">37.8</td>
-<td style="text-align: right;">17.1</td>
-<td style="text-align: right;">186</td>
-<td style="text-align: right;">3300</td>
-<td style="text-align: left; font-style: italic;">missing</td>
-</tr>
-<tr class="even">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">12</td>
-<td style="text-align: left;">Adelie</td>
-<td style="text-align: left;">Torgersen</td>
-<td style="text-align: right;">37.8</td>
-<td style="text-align: right;">17.3</td>
-<td style="text-align: right;">180</td>
-<td style="text-align: right;">3700</td>
-<td style="text-align: left; font-style: italic;">missing</td>
-</tr>
-<tr class="odd">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">13</td>
-<td style="text-align: left;">Adelie</td>
-<td style="text-align: left;">Torgersen</td>
-<td style="text-align: right;">41.1</td>
-<td style="text-align: right;">17.6</td>
-<td style="text-align: right;">182</td>
-<td style="text-align: right;">3200</td>
-<td style="text-align: left;">female</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">⋮</td>
-<td style="text-align: right;">⋮</td>
-<td style="text-align: right;">⋮</td>
-<td style="text-align: right;">⋮</td>
-<td style="text-align: right;">⋮</td>
-<td style="text-align: right;">⋮</td>
-<td style="text-align: right;">⋮</td>
-<td style="text-align: right;">⋮</td>
-</tr>
-<tr class="odd">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">333</td>
-<td style="text-align: left;">Chinstrap</td>
-<td style="text-align: left;">Dream</td>
-<td style="text-align: right;">45.2</td>
-<td style="text-align: right;">16.6</td>
-<td style="text-align: right;">191</td>
-<td style="text-align: right;">3250</td>
-<td style="text-align: left;">female</td>
-</tr>
-<tr class="even">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">334</td>
-<td style="text-align: left;">Chinstrap</td>
-<td style="text-align: left;">Dream</td>
-<td style="text-align: right;">49.3</td>
-<td style="text-align: right;">19.9</td>
-<td style="text-align: right;">203</td>
-<td style="text-align: right;">4050</td>
-<td style="text-align: left;">male</td>
-</tr>
-<tr class="odd">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">335</td>
-<td style="text-align: left;">Chinstrap</td>
-<td style="text-align: left;">Dream</td>
-<td style="text-align: right;">50.2</td>
-<td style="text-align: right;">18.8</td>
-<td style="text-align: right;">202</td>
-<td style="text-align: right;">3800</td>
-<td style="text-align: left;">male</td>
-</tr>
-<tr class="even">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">336</td>
-<td style="text-align: left;">Chinstrap</td>
-<td style="text-align: left;">Dream</td>
-<td style="text-align: right;">45.6</td>
-<td style="text-align: right;">19.4</td>
-<td style="text-align: right;">194</td>
-<td style="text-align: right;">3525</td>
-<td style="text-align: left;">female</td>
-</tr>
-<tr class="odd">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">337</td>
-<td style="text-align: left;">Chinstrap</td>
-<td style="text-align: left;">Dream</td>
-<td style="text-align: right;">51.9</td>
-<td style="text-align: right;">19.5</td>
-<td style="text-align: right;">206</td>
-<td style="text-align: right;">3950</td>
-<td style="text-align: left;">male</td>
-</tr>
-<tr class="even">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">338</td>
-<td style="text-align: left;">Chinstrap</td>
-<td style="text-align: left;">Dream</td>
-<td style="text-align: right;">46.8</td>
-<td style="text-align: right;">16.5</td>
-<td style="text-align: right;">189</td>
-<td style="text-align: right;">3650</td>
-<td style="text-align: left;">female</td>
-</tr>
-<tr class="odd">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">339</td>
-<td style="text-align: left;">Chinstrap</td>
-<td style="text-align: left;">Dream</td>
-<td style="text-align: right;">45.7</td>
-<td style="text-align: right;">17.0</td>
-<td style="text-align: right;">195</td>
-<td style="text-align: right;">3650</td>
-<td style="text-align: left;">female</td>
-</tr>
-<tr class="even">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">340</td>
-<td style="text-align: left;">Chinstrap</td>
-<td style="text-align: left;">Dream</td>
-<td style="text-align: right;">55.8</td>
-<td style="text-align: right;">19.8</td>
-<td style="text-align: right;">207</td>
-<td style="text-align: right;">4000</td>
-<td style="text-align: left;">male</td>
-</tr>
-<tr class="odd">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">341</td>
-<td style="text-align: left;">Chinstrap</td>
-<td style="text-align: left;">Dream</td>
-<td style="text-align: right;">43.5</td>
-<td style="text-align: right;">18.1</td>
-<td style="text-align: right;">202</td>
-<td style="text-align: right;">3400</td>
-<td style="text-align: left;">female</td>
-</tr>
-<tr class="even">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">342</td>
-<td style="text-align: left;">Chinstrap</td>
-<td style="text-align: left;">Dream</td>
-<td style="text-align: right;">49.6</td>
-<td style="text-align: right;">18.2</td>
-<td style="text-align: right;">193</td>
-<td style="text-align: right;">3775</td>
-<td style="text-align: left;">male</td>
-</tr>
-<tr class="odd">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">343</td>
-<td style="text-align: left;">Chinstrap</td>
-<td style="text-align: left;">Dream</td>
-<td style="text-align: right;">50.8</td>
-<td style="text-align: right;">19.0</td>
-<td style="text-align: right;">210</td>
-<td style="text-align: right;">4100</td>
-<td style="text-align: left;">male</td>
-</tr>
-<tr class="even">
-<td class="rowNumber" style="text-align: right; font-weight: bold;">344</td>
-<td style="text-align: left;">Chinstrap</td>
-<td style="text-align: left;">Dream</td>
-<td style="text-align: right;">50.2</td>
-<td style="text-align: right;">18.7</td>
-<td style="text-align: right;">198</td>
-<td style="text-align: right;">3775</td>
-<td style="text-align: left;">female</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> <span class="fu">dataset</span>(<span class="st">"datasets"</span>, <span class="st">"iris"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="libraries" class="level2">
 <h2 class="anchored" data-anchor-id="libraries">Libraries</h2>
 <section id="dataframes" class="level3">
 <h3 class="anchored" data-anchor-id="dataframes">Dataframes</h3>
-<p><code>Dataframes.jl</code> is the main package for dealing with dataframes in Julia. You can use it directly to manipulate tables, but we also have 2 alternatives: DataFramesMeta and Tidier.</p>
+<p><code>Dataframes.jl</code> is the main package for dealing with dataframes in Julia. You can use it directly to manipulate tables, but we also have 2 alternatives: <code>DataFramesMeta</code> and <code>TidierData</code>.</p>
 </section>
 <section id="dataframesmeta" class="level3">
 <h3 class="anchored" data-anchor-id="dataframesmeta">DataFramesMeta</h3>
 <p>DataFramesMeta is a collection of macros based on DataFrames. It provides many syntatic helpers to slice rows, create columns and summarise data.</p>
 </section>
-<section id="tidier" class="level3">
-<h3 class="anchored" data-anchor-id="tidier">Tidier</h3>
-<p>Tidier is inspired by the <code>tidyverse</code> ecosystem in R. Tidier use macros to rewrite your code into DataFrames.jl code. Because of this “tidy” heritance, we will often talk about the R packages that inspired the Julia ones (like <code>dplyr</code>, <code>tidyr</code> and many others).</p>
+<section id="tidierdata" class="level3">
+<h3 class="anchored" data-anchor-id="tidierdata">TidierData</h3>
+<p>Tidier is inspired by the <code>tidyverse</code> ecosystem in R. TidierData use macros to rewrite your code into DataFrames.jl code. Because of this “tidy” heritance, we will often talk about the R packages that inspired the Julia ones (like <code>dplyr</code>, <code>tidyr</code> and many others).</p>
 <p>In this book, whenever possible, we will show the different approaches in a tabset so you can compare them, giving more emphasis on Tidier.</p>
 </section>
 </section>
 <section id="operations" class="level2">
 <h2 class="anchored" data-anchor-id="operations">Operations</h2>
 <p>Let’s start with some unary operations, ie. operations that take only one dataframe as input and return one dataframe as output.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. We can divide these operations in some categories:</p>
-<section id="rows-operations" class="level3">
-<h3 class="anchored" data-anchor-id="rows-operations">Rows operations</h3>
+<section id="row-operations" class="level3">
+<h3 class="anchored" data-anchor-id="row-operations">Row operations</h3>
 <p>These are operations that only affect rows, leaving all columns untouched.</p>
 <ul>
 <li><p><em>Filtering</em> or <em>subsetting</em> is when we select a subset of rows based on some criteria. Example: all male penguins of species Adelie. The output is a dataframe with the exact same columns, but possibly fewer rows.</p></li>
@@ -606,7 +333,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>These are operations that only affect columns, leaving all rows untouched.</p>
 <ul>
 <li><p><em>Selecting</em> is when we select some columns of a dataframe, while keeping all the rows. Example: select the <code>species</code> and <code>sex</code> columns.</p></li>
-<li><p><em>Mutating</em> or <em>transforming</em> is when we create new columns. Example: a new column <code>body_mass_kg</code> can be obtained dividing the column <code>body_mass_g</code> by 1000.</p></li>
+<li><p><em>Mutating</em> or <em>transforming</em> is when we create new columns. Example: a new column <code>body_mass_kg</code> can be obtained dividing the column <code>body_mass_g</code> by 1000 for each entry.</p></li>
 </ul>
 </section>
 <section id="reshaping-operations" class="level3">
@@ -623,8 +350,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><em>Grouping</em> is when we split the dataframe into a collection (array) of dataframes using some criteria. Example: grouping by <code>species</code> gives us 3 dataframes, each with only one species.</li>
 </ul>
 </section>
-<section id="mixed-operations" class="level3">
-<h3 class="anchored" data-anchor-id="mixed-operations">Mixed operations</h3>
+<section id="summary-operations" class="level3">
+<h3 class="anchored" data-anchor-id="summary-operations">Summary operations</h3>
 <p>These operations can possibly change rows and columns at the same time.</p>
 <ul>
 <li>Distinct;</li>
@@ -707,7 +434,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="chaining-operations" class="level2">
 <h2 class="anchored" data-anchor-id="chaining-operations">Chaining operations</h2>
 <p>We can chain (or pipe) dataframe operations as follows with the <code>@chain</code> macro:</p>
-<div id="4" class="cell" data-execution_count="0">
+<div id="b4330699" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@chain</span> penguins <span class="cf">begin</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@filter</span> !<span class="fu">ismissing</span>(sex)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@group_by</span> sex</span>
@@ -721,7 +448,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In Tidier, using the column names as if they were variables in the environment leads to some complication when we want to use other variables that are not column names.</p>
 <p>For example, suppose you want to arrange penguins by a column that is stored in a variable.</p>
 <p>When this happens, we add <code>@eval</code> before the Tidier code and add a <code>$</code> to force evaluation of the variable, as in the following example:</p>
-<div id="6" class="cell" data-execution_count="0">
+<div id="02f559e9" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>my_arrange_column <span class="op">=</span> <span class="op">:</span>body_mass_g;</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@eval</span> <span class="pp">@arrange</span> penguins <span class="op">$</span>my_arrange_column</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -734,6 +461,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>https://tidierorg.github.io/TidierData.jl/latest/reference/</p>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-Wickham2023" class="csl-entry" role="listitem">
+Wickham, Hadley, Mine Çetinkaya-Rundel, and Garrett Grolemund. 2023. <em><span class="nocase">R for data science: Import, tidy, transform, visualize, and model data</span></em>. Second. O’Reilly. <a href="https://r4ds.hadley.nz/">https://r4ds.hadley.nz/</a>.
+</div>
+</div>
 </section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
@@ -825,8 +557,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -937,7 +667,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

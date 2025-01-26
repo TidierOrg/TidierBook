@@ -1,0 +1,341 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "jupyter: julia-1.11\n",
+        "# engine: julia\n",
+        "---\n",
+        "\n",
+        "# What is a dataframe?\n",
+        "\n",
+        "A `dataframe` is a table (or a matrix) with some special restrictions that make it suited for data analysis. You can think of a dataframe as an array of vectors put side-by-side, all of which have the same length. Each column has a name.\n",
+        "\n",
+        "When a dataframe is `tidy`, each row is an observation and each column is a variable. See [@Wickham2023, chapter 5] for a detailed discussion on tidy data and its advantages.\n",
+        "\n",
+        "![A tidy dataset. Figure from [@Wickham2023].](https://r4ds.hadley.nz/images/tidy-1.png)\n",
+        "\n",
+        "We will always try to \"tidy\" a dataframe in order to use it.\n",
+        "\n",
+        "Let's load the classic iris dataset to discuss in details."
+      ],
+      "id": "a5d84e86"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "using DataFrames, RDatasets\n",
+        "using Tidier, Chain\n",
+        "import DataFramesMeta as DFM\n",
+        "\n",
+        "iris = dataset(\"datasets\", \"iris\");"
+      ],
+      "id": "6a7737f8",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Basic manipulation of dataframes\n",
+        "\n",
+        "You can print by running the follow:"
+      ],
+      "id": "11f95a78"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "iris"
+      ],
+      "id": "56d45c10",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "For each flower (row) there are 4 measurements (length and width of sepal and petal), along with the corresponding species. This dataframe is *tidy* because each row is an observation (a flower) and each column is a measurement of the same flower. This is the best scenario for a dataset, and you won't always be so lucky.\n",
+        "\n",
+        "You can see a lot of useful information in the print above:\n",
+        "\n",
+        "- There are 150 rows and 5 columns (the \"150x5\" part).\n",
+        "- The name and type of each column.\n",
+        "- A counting of rows on the left.\n",
+        "\n",
+        "There are several ways to view a column; all the below result in the same:"
+      ],
+      "id": "7c96bd1f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "iris.PetalLength;\n",
+        "iris[!, 1];\n",
+        "iris[!, \"PetalLength\"];\n",
+        "iris[!, :PetalLength]"
+      ],
+      "id": "ae58cf2b",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "It is important to note that these are *views* of the dataframe; so if you modify then, you also modify the dataframe. To get a copy of the column, use"
+      ],
+      "id": "8512adb8"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "iris[:, 1];\n",
+        "iris[:, \"PetalLength\"];\n",
+        "iris[:, :PetalLength]"
+      ],
+      "id": "f93b06ea",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Views are faster to access than copies, so it depends on the use you are going to make. See [the Dataframes.jl docs](https://dataframes.juliadata.org/stable/man/getting_started/#The-DataFrame-Type) for more details.\n",
+        "\n",
+        "If the column name is inside a variable, say `my_column`, then you can use the following:"
+      ],
+      "id": "03f4eba3"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# in case it is a string\n",
+        "my_column = \"PetalLength\";\n",
+        "iris[:, my_column];\n",
+        "\n",
+        "# in case it is a symbol\n",
+        "my_column2 = :PetalLength;\n",
+        "iris[:, my_column2]"
+      ],
+      "id": "009e613f",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Symbols are a little faster to access compared to string, but special strings can't be turned into symbols.\n",
+        "\n",
+        "As an example of the \"copy vs. view\" behaviour, let's modify the first row and set the `SepalLength` to 999. The copy approach won't work:"
+      ],
+      "id": "5355f806"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "iris[:, \"PetalLength\"][1] = 999;\n",
+        "iris"
+      ],
+      "id": "baf84b39",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "but with view, it works:"
+      ],
+      "id": "2d535547"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "iris.SepalLength[1] = 999;\n",
+        "iris"
+      ],
+      "id": "45f96e62",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Libraries\n",
+        "\n",
+        "### Dataframes\n",
+        "\n",
+        "`Dataframes.jl` is the main package for dealing with dataframes in Julia. You can use it directly to manipulate tables, but we also have 2 alternatives: `DataFramesMeta` and `TidierData`. \n",
+        "\n",
+        "### DataFramesMeta\n",
+        "\n",
+        "DataFramesMeta is a collection of macros based on DataFrames. It provides many syntatic helpers to slice rows, create columns and summarise data.\n",
+        "\n",
+        "### TidierData\n",
+        "\n",
+        "Tidier is inspired by the `tidyverse` ecosystem in R. TidierData use macros to rewrite your code into DataFrames.jl code. Because of this \"tidy\" heritance, we will often talk about the R packages that inspired the Julia ones (like `dplyr`, `tidyr` and many others).\n",
+        "\n",
+        "In this book, whenever possible, we will show the different approaches in a tabset so you can compare them, giving more emphasis on Tidier.\n",
+        "\n",
+        "## Operations\n",
+        "\n",
+        "Let's start with some unary operations, ie. operations that take only one dataframe as input and return one dataframe as output.^[Join operations will be dealt later.]. We can divide these operations in some categories:\n",
+        "\n",
+        "### Row operations\n",
+        "\n",
+        "These are operations that only affect rows, leaving all columns untouched.\n",
+        "\n",
+        "- *Filtering* or *subsetting* is when we select a subset of rows based on some criteria. Example: all male penguins of species Adelie. The output is a dataframe with the exact same columns, but possibly fewer rows.\n",
+        "\n",
+        "- *Arranging* or *ordering* is when we reorder the rows of a dataframe using some criteria.\n",
+        "\n",
+        "### Column operations\n",
+        "\n",
+        "These are operations that only affect columns, leaving all rows untouched.\n",
+        "\n",
+        "- *Selecting* is when we select some columns of a dataframe, while keeping all the rows. Example: select the `species` and `sex` columns.\n",
+        "\n",
+        "- *Mutating* or *transforming* is when we create new columns. Example: a new column `body_mass_kg` can be obtained dividing the column `body_mass_g` by 1000 for each entry.\n",
+        "\n",
+        "### Reshaping operations\n",
+        "\n",
+        "These operations change the shape of a dataframe, making it wider or longer.\n",
+        "\n",
+        "- `Widening`\n",
+        "\n",
+        "- `Longering`?\n",
+        "\n",
+        "### Grouping operations\n",
+        "\n",
+        "- *Grouping* is when we split the dataframe into a collection (array) of dataframes using some criteria. Example: grouping by `species` gives us 3 dataframes, each with only one species.\n",
+        "\n",
+        "### Summary operations\n",
+        "\n",
+        "These operations can possibly change rows and columns at the same time.\n",
+        "\n",
+        "- Distinct;\n",
+        "- Counting;\n",
+        "- *Summarising* or *combining* is when we apply some function to some columns in order to reduce the amount of rows with some kind of summary (like a mean, median, max, and so on). Example: for each `species`, apply the `mean` function to the columns `body_mass_g`. This will yield a dataframe with 3 rows, one for each species. Summarising is usually done after a grouping, so the summary is calculated with relation to each of the groups.\n",
+        "\n",
+        "??? deixar grupo e sumário juntos?\n",
+        "\n",
+        "Since all these functions return a dataframe (or an array of dataframes, in the case of grouping), we can chain these operations together, with the convention that on grouped dataframes we apply the function in each one of the groups.\n",
+        "\n",
+        "Now for binary operations (ie. operations that take two dataframes), we have all the joins:\n",
+        "\n",
+        "- Left join;\n",
+        "- Right join;\n",
+        "- Inner join;\n",
+        "- Outer join;\n",
+        "- Full join.\n",
+        "\n",
+        "## Comparing Tidier with DataFramesMeta\n",
+        "\n",
+        "The following table list the operations on each package:\n",
+        "\n",
+        "| dplyr       | Tidier       | DataFramesMeta               | DataFrames   |\n",
+        "|-------------|--------------|------------------------------|--------------|\n",
+        "| `filter`    | `@filter`    | `@subset` / `@rsubset`       | `subset`     |\n",
+        "| `arrange`   | `@arrange`   | `@orderby` / `@rorderby`     | `sort!`      |\n",
+        "| `select`    | `@select`    | `@select`                    | array sintax |\n",
+        "| `mutate`    | `@mutate`    | `@transform` / `@rtransform` | array sintax |\n",
+        "| `group_by`  | `@group_by`  | `@groupby`                   | `groupby`    |\n",
+        "| `summarise` | `@summarise` | `@combine`                   | `combine`    |\n",
+        "\n",
+        "It is clear that for those coming from `R`, Tidier will look like the most natural approach.\n",
+        "\n",
+        "Notice that we have a name clash with `@select`: that is why we `import DataFramesMeta as DFM` at the beginning.\n",
+        "\n",
+        "We will see each operation with more details in the following chapters.\n",
+        "\n",
+        "## Chaining operations\n",
+        "\n",
+        "We can chain (or pipe) dataframe operations as follows with the `@chain` macro:"
+      ],
+      "id": "078f7a9a"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "@chain penguins begin\n",
+        "    @filter !ismissing(sex)\n",
+        "    @group_by sex\n",
+        "    @summarise mean = mean(bill_length_mm)\n",
+        "    @arrange mean\n",
+        "end"
+      ],
+      "id": "a67b5622",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Using variables as column names\n",
+        "\n",
+        "In Tidier, using the column names as if they were variables in the environment leads to some complication when we want to use other variables that are not column names.\n",
+        "\n",
+        "For example, suppose you want to arrange penguins by a column that is stored in a variable.\n",
+        "\n",
+        "When this happens, we add `@eval` before the Tidier code and add a `$` to force evaluation of the variable, as in the following example:"
+      ],
+      "id": "e11c9cf2"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#| eval: false\n",
+        "my_arrange_column = :body_mass_g;\n",
+        "\n",
+        "@eval @arrange penguins $my_arrange_column"
+      ],
+      "id": "db14fa33",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Documentation\n",
+        "\n",
+        "https://dataframes.juliadata.org/stable/man/working_with_dataframes/\n",
+        "\n",
+        "https://juliadata.org/DataFramesMeta.jl/stable\n",
+        "\n",
+        "https://tidierorg.github.io/TidierData.jl/latest/reference/"
+      ],
+      "id": "fe06b262"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "julia-1.11",
+      "language": "julia",
+      "display_name": "Julia 1.11.2",
+      "path": "/home/vituri/snap/code/181/.local/share/jupyter/kernels/julia-1.11"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
